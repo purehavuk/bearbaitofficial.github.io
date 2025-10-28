@@ -25,7 +25,7 @@ jobs:
         uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4
         with:
           ruby-version: '3.1'
-          bundler-cache: false # We'll handle this manually due to platform issues
+          bundler-cache: false
           cache-version: 0
           
       - name: Fix platform compatibility
@@ -36,7 +36,10 @@ jobs:
           
       - name: Install dependencies
         run: bundle install
-          
+        
+      - name: Install jekyll-agency theme
+        run: gem install jekyll-agency
+        
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
