@@ -25,11 +25,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: false  # We'll handle this manually
+          bundler-cache: false
           
-      - name: Update Gemfile.lock
+      - name: Unfreeze bundle and update lockfile
         run: |
           bundle config set frozen false
+          rm -f Gemfile.lock
           bundle install
           
       - name: Setup Pages
