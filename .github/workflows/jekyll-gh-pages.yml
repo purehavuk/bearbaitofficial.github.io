@@ -12,6 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
+  cancel-inprogress: false
 
 jobs:
   build:
@@ -24,7 +25,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: true
+          bundler-cache: false  # We'll handle this manually
+          
+      - name: Update Gemfile.lock
+        run: |
+          bundle config set frozen false
+          bundle install
           
       - name: Setup Pages
         id: pages
