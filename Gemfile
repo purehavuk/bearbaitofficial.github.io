@@ -1,8 +1,7 @@
-# after any changes to the Gemfile, execute bundle update!
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-# Performance-booster for watching directories on Windows (Windows only)
-gem "wdm", ">= 0.1.0", :platforms => [:mingw, :mswin, :x64_mingw]
+gem "jekyll", "~> 4.2"
 
-# Your existing gemspec
-gemspec
+group :jekyll_plugins do
+  gem "jekyll-timeago", "~> 0.13.1"
+end
