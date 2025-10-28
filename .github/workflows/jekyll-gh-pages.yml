@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-inprogress: false
 
 jobs:
   build:
@@ -22,28 +22,11 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Setup Ruby
-        uses: ruby/setup-ruby@4a9ddd6f338a97768b8006bf671dfbad383215f4
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: false
-          cache-version: 0
+          bundler-cache: true
           
-      - name: Fix platform compatibility
-        run: |
-          bundle lock --add-platform x86_64-linux
-          bundle lock --add-platform ruby
-          bundle config set force_ruby_platform true
-          
-      - name: Build and install local theme
-        run: |
-          # Build the gem from gemspec
-          gem build jekyll-agency.gemspec
-          # Install the built gem
-          gem install jekyll-agency-*.gem
-          
-      - name: Install dependencies
-        run: bundle install
-        
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
