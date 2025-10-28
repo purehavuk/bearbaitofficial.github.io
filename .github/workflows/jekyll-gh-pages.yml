@@ -34,11 +34,15 @@ jobs:
           bundle lock --add-platform ruby
           bundle config set force_ruby_platform true
           
+      - name: Build and install local theme
+        run: |
+          # Build the gem from gemspec
+          gem build jekyll-agency.gemspec
+          # Install the built gem
+          gem install jekyll-agency-*.gem
+          
       - name: Install dependencies
         run: bundle install
-        
-      - name: Install jekyll-agency theme
-        run: gem install jekyll-agency
         
       - name: Setup Pages
         id: pages
