@@ -1,0 +1,54 @@
+/* Anti-Gravity Field — canvas layer blur values and configurations */
+
+:root {
+    /* Layer 1: base field */
+    --ag-l1-count: 5000;
+    --ag-l1-color: rgba(127, 55, 55, 0.005);
+    --ag-l1-color-active: rgba(255, 176, 150, 0.15);
+    --ag-l1-drift-min: 0.25;
+    --ag-l1-drift-max: 0.75;
+    --ag-l1-size-min: 0.5;
+    --ag-l1-size-max: 0.5;
+    --ag-l1-push: 3072;
+    --ag-l1-alpha: 0.95;
+    --ag-l1-alpha-var: 0.15;
+    --ag-l1-speed: 1;
+
+    /* Layer 2: large, slow, blurred overlay */
+    --ag-l2-count: 500;
+    --ag-l2-color: rgba(127, 55, 55, 0.25);
+    --ag-l2-color-active: rgba(255, 125, 125, 0.35);
+    --ag-l2-drift-min: 0.75;
+    --ag-l2-drift-max: 1.5;
+    --ag-l2-size-min: 1.5;
+    --ag-l2-size-max: 5;
+    --ag-l2-push: 2048;
+    --ag-l2-alpha: 0.5;
+    --ag-l2-alpha-var: 0.5;
+    --ag-l2-speed: 0.75;
+
+    /* Layer 3: blurred background */
+    --ag-l3-count: 250;
+    --ag-l3-color: rgba(127, 55, 55, 0);
+    --ag-l3-color-active: rgba(167, 130, 130, 0.5);
+    --ag-l3-drift-min: 5.0;
+    --ag-l3-drift-max: 10.0;
+    --ag-l3-size-min: 5;
+    --ag-l3-size-max: 25;
+    --ag-l3-push: 1024;
+    --ag-l3-alpha: 0.75;
+    --ag-l3-alpha-var: 0.15;
+    --ag-l3-speed: 0.5;
+}
+
+.antigravity-field {
+    filter: blur(0px);
+}
+
+.antigravity-field-blur {
+    filter: blur(3px);
+}
+
+.antigravity-field-blur-2 {
+    filter: blur(9px);
+}

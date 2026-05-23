@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="2048"
+   height="1080"
+   viewBox="0 0 541.86666 285.75"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="about.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   sodipodi:docname="banner-template.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#4d4d4d"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#4d4d4d"
+     inkscape:document-units="px"
+     inkscape:zoom="0.18005371"
+     inkscape:cx="835.86169"
+     inkscape:cy="2010.5112"
+     inkscape:window-width="2560"
+     inkscape:window-height="1367"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect2"
+       style="fill:#000000;fill-opacity:1;stroke-width:0.197582;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:0;paint-order:stroke fill markers;opacity:0.5"
+       d="M 541.86666,10.892358 65.799601,285.75 H 541.86666 Z"
+       sodipodi:nodetypes="cccc" />
+    <rect
+       style="fill:#000000;stroke-width:0.190534;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:0;paint-order:stroke fill markers"
+       id="rect1"
+       width="1016.8061"
+       height="42.333332"
+       x="-345.20538"
+       y="238.03337"
+       transform="rotate(-30)" />
+    <g
+       id="g1"
+       transform="translate(1.7614284e-5,-27.836978)">
+      <text
+         xml:space="preserve"
+         style="font-weight:bold;font-size:25.4px;line-height:0.9;font-family:Hack;-inkscape-font-specification:'Hack Bold';letter-spacing:0px;word-spacing:0.275828px;writing-mode:lr-tb;direction:ltr;fill:#fef6db;fill-opacity:1;stroke-width:0.1875;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:0;paint-order:stroke fill markers"
+         x="-219.57249"
+         y="290.92755"
+         id="text1"
+         transform="rotate(-30)"><tspan
+           sodipodi:role="line"
+           id="tspan1"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:25.4px;font-family:Pono;-inkscape-font-specification:'Pono Bold';fill:#fef6db;fill-opacity:1;stroke-width:0.1875"
+           x="-219.57249"
+           y="290.92755">ABOUT ABOUT ABOUT ABOUT ABOUT </tspan></text>
+    </g>
+  </g>
+</svg>
