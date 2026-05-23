@@ -1,0 +1,24 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Treat all image formats as binary (prevents line-ending corruption)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.svg text eol=lf
+
+# Treat video and audio as binary
+*.webm binary
+*.mp4 binary
+*.mp3 binary
+*.ogg binary
+
+# Treat fonts as binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
