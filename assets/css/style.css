@@ -1641,9 +1641,10 @@ button:hover>span {
         bottom: 28px;
         min-width: 220px;
         max-width: calc(100vw - 132px);
-        padding: 8px 10px 26px;
+        padding: 0 10px 24px;
         font-size: 11px;
         white-space: nowrap;
+        align-items: center;
     }
 }
 
