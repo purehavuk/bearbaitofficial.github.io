@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="8.5mm"
+   height="13.5mm"
+   viewBox="0 0 8.5 13.5"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="7.svg"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#4d4d4d"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#4d4d4d"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="5.8818908"
+     inkscape:cx="-26.35207"
+     inkscape:cy="41.653272"
+     inkscape:window-width="2560"
+     inkscape:window-height="1367"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="46.981851,-78.521699"
+       orientation="1,0"
+       id="guide7"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="52.124982,-78.504949"
+       orientation="1,0"
+       id="guide8"
+       inkscape:locked="false" />
+    <sodipodi:guide
+       position="1.0531045,7.7121581"
+       orientation="0,-1"
+       id="guide9"
+       inkscape:locked="false" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000;fill-opacity:0.05"
+       d="M 1.9429482,11.769096 0.43403979,13.25 H 8.0381083 l -1.482695,-1.480904 z"
+       id="path18" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000;fill-opacity:1"
+       d="M 8.25,7.0448935 6.7410915,7.8025033 V 11.582508 L 8.25,13.089684 Z"
+       id="path19" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000;fill-opacity:0.05"
+       d="m 0.25,7.0448935 c 0.00768,0.028153 0.00179,4.9929515 5.4609e-4,6.0206635 L 1.7610928,11.583044 V 7.8030393 h -0.00219 z"
+       id="path20" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;fill-opacity:0.05;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000"
+       d="M 1.7605467,5.9709433 0.25,6.7499996 1.7605467,7.5290563 H 6.7405454 L 8.25,6.7499996 6.7405454,5.9709433 Z"
+       id="path21" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;fill-opacity:0.05;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000"
+       d="M 0.25054609,0.43444297 C 0.25179609,1.4621545 0.25768609,6.4269525 0.25,6.4551059 L 1.7589083,5.6969602 h 0.00219 V 1.9169551 Z"
+       id="path22" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000"
+       d="M 8.25,0.41031497 6.7410915,1.9174913 V 5.6974961 L 8.25,6.4551056 Z"
+       id="path23" />
+    <path
+       style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:#ffffff;fill-opacity:1;stroke-width:1.04712;stroke-linecap:square;stroke-miterlimit:0;enable-background:accumulate;stop-color:#000000"
+       d="M 0.43403979,0.24999987 1.9429482,1.7309038 h 4.6124651 l 1.482695,-1.48090393 z"
+       id="path24" />
+  </g>
+</svg>
