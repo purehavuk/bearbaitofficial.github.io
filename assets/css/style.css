@@ -1061,6 +1061,10 @@ button:hover>span {
     visibility: visible;
 }
 
+.cat.speaking .cat-idle {
+    visibility: hidden;
+}
+
 .cat-eyes {
     z-index: 2;
     filter: drop-shadow(0 0 3px #f00) drop-shadow(0 0 10px rgba(255, 0, 0, 0.86)) drop-shadow(0 0 22px rgba(255, 32, 0, 0.58)) drop-shadow(0 0 34px rgba(255, 184, 54, 0.42));
@@ -1625,7 +1629,7 @@ button:hover>span {
     }
 
     .cat-mouth {
-        content: url('../img/cat/cat-mouth-talk-80.png');
+        content: url('../img/cat/cat-talk-80.png');
     }
 
     .cat-eyes {
