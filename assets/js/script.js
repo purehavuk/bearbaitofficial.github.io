@@ -49,10 +49,16 @@ MAL 9000 OS v1.1
 
 OPEN "OUTBOUND RELAY",8,1
 
-               +------------------------------------------------+
-               |       DESTINATION SIGNAL LOCK ACQUIRED         |
-               |       TRANSMISSION CHANNEL STANDING BY         |
-               +------------------------------------------------+
+   __                 __   _
+  / /  ___  ___ _ ___/ /  (_)  ___   ___ _
+ / /__/ _ \\/ _ \`// _  /  / /  / _ \\ / _ \`/
+/____/\\___/\\_,_/ \\_,_/  /_/  /_//_/ \\_, /
+                                   /___/
+   ___
+  / _ \\ ___ _  ___ _ ___
+ / ___// _ \`/ / _ \`// -_)
+/_/    \\_,_/  \\_, / \\__/
+             /___/
                 </pre>
                 <div class="terminal-boot-prompt" aria-hidden="true">
                     <span class="relay-status">ESTABLISHING SECURE UPLINK... 300 BPS</span><span class="terminal-boot-cursor"></span>

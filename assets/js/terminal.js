@@ -25,8 +25,8 @@ WELCOME TO
 (function () {
     'use strict';
 
-    const SYSTEM_PREAMBLE = `MAL 9000 OS v1.1
-(C) purehavuk Industries, 1974-1979
+    const SYSTEM_PREAMBLE = `MAL 9000 - UNiX SYSTEM v1.02
+(C) purehavuk Industries, 1976-1979
 
 COMMAND?`;
     const overlay = document.getElementById('terminal-boot');
@@ -37,8 +37,8 @@ COMMAND?`;
     if (!overlay || !screen || !output || !status || !diagnostic) return;
 
     const preambleDuration = 1600;
-    const transferDuration = 9000;
-    const receiveDuration = 6500;
+    const transferDuration = 7500;
+    const receiveDuration = 5000;
     const lines = ASCII_ART.replace(/^\n|\s+$/g, '').split('\n').map(function (line) {
         return line.trimEnd();
     });
