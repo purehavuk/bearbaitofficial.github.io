@@ -9,9 +9,20 @@
     <link rel="preload" href="assets/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.woff2" as="font" type="font/woff2"
         crossorigin>
     <link rel="preload" href="assets/fonts/pono_088/Pono_088.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/img/background/bearbait-banner.webp" as="image" type="image/webp"
+        fetchpriority="high">
+    <link rel="preload" href="assets/img/logos/bearbait-official.png" as="image" fetchpriority="high">
+    <link rel="preload" href="assets/img/crt/bearbait-CRT-reflection.png" as="image">
+    <link rel="preload" href="assets/img/crt/bearbait-CRT-handprint.png" as="image">
+    <link rel="preload" href="assets/img/background/prevail-framework.webp" as="image" type="image/webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/antigravity-field.css">
+    <script>
+        if ('serviceWorker' in navigator && window.isSecureContext) {
+            navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+        }
+    </script>
 </head>
 
 <body>
@@ -33,7 +44,7 @@
     </div>
     <script src="assets/js/terminal.js"></script>
 
-    <video class="bg-video" autoplay muted loop playsinline>
+    <video class="bg-video" autoplay muted loop playsinline preload="auto">
         <source src="assets/video/prevail-framework.webm" type="video/webm">
     </video>
     <div class="bg-overlay"></div>
