@@ -16,6 +16,23 @@
 
 <body>
 
+    <div class="terminal-boot-overlay" id="terminal-boot" role="status" aria-label="Loading BearBait Official">
+        <div class="terminal-boot-screen">
+            <div class="terminal-boot-header">
+                <span>MAL 9000 - RELAY TERMINAL</span>
+                <span>2400 BAUD</span>
+            </div>
+            <pre class="terminal-boot-output" id="terminal-boot-output" aria-hidden="true"></pre>
+            <div class="terminal-boot-prompt" aria-hidden="true">
+                <span id="terminal-boot-status">CONNECTING...</span><span class="terminal-boot-cursor"></span>
+            </div>
+            <div class="terminal-boot-diagnostic" id="terminal-boot-diagnostic" aria-hidden="true">
+                CALIBRATING ANIMAL-POWERED INFRASTRUCTURE...
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/terminal.js"></script>
+
     <video class="bg-video" autoplay muted loop playsinline>
         <source src="assets/video/prevail-framework.webm" type="video/webm">
     </video>
@@ -60,16 +77,9 @@
 
             <!-- WELCOME -->
             <section id="welcome" class="page-section">
-                <div class="section-titlebar">
-                    <div class="titlebar-inner">
-                        <h2 class="titlebar-title">Welcome</h2>
-                        <div class="titlebar-hover"></div>
-                    </div>
-                </div>
-
                 <div class="hero-wrap">
 
-                    <img class="hero-bg" src="assets/img/background/lab-scene.png" alt="" width="1707" height="720"
+                    <img class="hero-bg" src="assets/img/background/bearbait-banner.webp" alt="" width="1707" height="720"
                         aria-hidden="true">
 
                     <div class="hero-col">

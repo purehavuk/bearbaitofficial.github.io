@@ -30,39 +30,75 @@
         });
     }
 
-    // Immersive CRT loading overlay helper
+    // Outbound terminal relay overlay helper
     let overlay = document.querySelector('.crt-loading-overlay');
     if (!overlay) {
         overlay = document.createElement('div');
-        overlay.className = 'crt-loading-overlay';
+        overlay.className = 'terminal-boot-overlay terminal-relay-overlay crt-loading-overlay';
+        overlay.setAttribute('role', 'status');
+        overlay.setAttribute('aria-label', 'Opening external link');
         overlay.innerHTML = `
-            <div class="loading-title">ESTABLISHING SECURE UPLINK...</div>
-            <div class="loading-sub">PLEASE HOLD FOR RELAY TRANSIT...</div>
+            <div class="terminal-boot-screen">
+                <div class="terminal-boot-header">
+                    <span>MAL 9000 - OUTBOUND RELAY</span>
+                    <span>2400 BAUD</span>
+                </div>
+                <pre class="terminal-boot-output terminal-relay-output" aria-hidden="true">
+       .--------------------------------------------.
+       |  OUTBOUND RELAY CHANNEL // PREPARING LINK |
+       |       >>>  DESTINATION SIGNAL LOCK  >>>   |
+       '--------------------------------------------'
+                </pre>
+                <div class="terminal-boot-prompt" aria-hidden="true">
+                    <span class="relay-status">ESTABLISHING SECURE UPLINK... 2400 BPS</span><span class="terminal-boot-cursor"></span>
+                </div>
+                <div class="terminal-boot-diagnostic"></div>
+            </div>
         `;
         document.body.appendChild(overlay);
     }
 
+    const relayScreen = overlay.querySelector('.terminal-boot-screen');
+    const relayDiagnostic = overlay.querySelector('.terminal-boot-diagnostic');
+    const relayMessages = window.BEARBAIT_TERMINAL_DIAGNOSTICS || [
+        'DEPLOYING BACKUP LLAMAS TO PRODUCTION',
+        'VERIFYING PENGUIN PARITY BITS',
+        'REALIGNING RACCOON WHISKER ANTENNAS'
+    ];
+
     // Desktop & Mobile Click-Delay Glitch & Link Hold (1.5 seconds)
-    const socialCards = document.querySelectorAll('.social-card');
-    socialCards.forEach(card => {
-        card.addEventListener('click', function (e) {
-            if (card.classList.contains('glitching')) {
+    const relayLinks = document.querySelectorAll('.social-card, a.btn-primary[href^="mailto:"]');
+    relayLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            if (link.classList.contains('glitching')) {
                 e.preventDefault();
                 return;
             }
 
             e.preventDefault();
-            card.classList.add('glitching');
+            link.classList.add('glitching');
+            if (relayDiagnostic) {
+                relayDiagnostic.textContent = '> ' + relayMessages[Math.floor(Math.random() * relayMessages.length)];
+                relayDiagnostic.classList.remove('refreshing');
+                void relayDiagnostic.offsetWidth;
+                relayDiagnostic.classList.add('refreshing');
+            }
+            if (relayScreen) {
+                relayScreen.classList.remove('signal-burst');
+                void relayScreen.offsetWidth;
+                relayScreen.classList.add('signal-burst');
+            }
             overlay.classList.add('active');
 
-            const href = card.getAttribute('href');
+            const href = link.getAttribute('href');
 
             setTimeout(() => {
                 window.location.href = href;
                 // Clean up classes after some delay to handle back navigation smoothly
                 setTimeout(() => {
-                    card.classList.remove('glitching');
+                    link.classList.remove('glitching');
                     overlay.classList.remove('active');
+                    if (relayScreen) relayScreen.classList.remove('signal-burst');
                 }, 1000);
             }, 1500);
         });
