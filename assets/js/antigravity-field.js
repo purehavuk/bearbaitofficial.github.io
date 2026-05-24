@@ -202,14 +202,36 @@
             raf = requestAnimationFrame(draw);
         }
 
-        window.addEventListener('pointermove', e => {
-            pointer.tx = e.clientX;
-            pointer.ty = e.clientY;
-        }, { passive: true });
-        window.addEventListener('pointerleave', () => {
+        function movePointerTarget(x, y) {
+            pointer.tx = x;
+            pointer.ty = y;
+        }
+
+        function centerPointerTarget() {
             pointer.tx = width / 2;
             pointer.ty = height / 2;
-        });
+        }
+
+        function trackTouch(e) {
+            const touch = e.touches[0];
+            if (touch) {
+                movePointerTarget(touch.clientX, touch.clientY);
+            } else {
+                centerPointerTarget();
+            }
+        }
+
+        window.addEventListener('pointermove', e => {
+            movePointerTarget(e.clientX, e.clientY);
+        }, { passive: true });
+        window.addEventListener('pointerleave', centerPointerTarget);
+
+        // Passive touch events keep the field responsive while allowing native page scrolling.
+        window.addEventListener('touchstart', trackTouch, { passive: true });
+        window.addEventListener('touchmove', trackTouch, { passive: true });
+        window.addEventListener('touchend', trackTouch, { passive: true });
+        window.addEventListener('touchcancel', trackTouch, { passive: true });
+
         window.addEventListener('resize', resize);
         window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
         document.addEventListener('visibilitychange', () => {
