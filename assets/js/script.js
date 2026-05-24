@@ -41,16 +41,21 @@
             <div class="terminal-boot-screen">
                 <div class="terminal-boot-header">
                     <span>MAL 9000 - OUTBOUND RELAY</span>
-                    <span>2400 BAUD</span>
+                    <span>MODE 80 / 300 BAUD</span>
                 </div>
                 <pre class="terminal-boot-output terminal-relay-output" aria-hidden="true">
-       .--------------------------------------------.
-       |  OUTBOUND RELAY CHANNEL // PREPARING LINK |
-       |       >>>  DESTINATION SIGNAL LOCK  >>>   |
-       '--------------------------------------------'
+MAL 9000 OS v1.1
+(C) purehavuk Industries, 1974-1979
+
+OPEN "OUTBOUND RELAY",8,1
+
+               +------------------------------------------------+
+               |       DESTINATION SIGNAL LOCK ACQUIRED         |
+               |       TRANSMISSION CHANNEL STANDING BY         |
+               +------------------------------------------------+
                 </pre>
                 <div class="terminal-boot-prompt" aria-hidden="true">
-                    <span class="relay-status">ESTABLISHING SECURE UPLINK... 2400 BPS</span><span class="terminal-boot-cursor"></span>
+                    <span class="relay-status">ESTABLISHING SECURE UPLINK... 300 BPS</span><span class="terminal-boot-cursor"></span>
                 </div>
                 <div class="terminal-boot-diagnostic"></div>
             </div>

@@ -1,9 +1,6 @@
     const ASCII_ART = `
-        ▗▖ ▗▖▗▞▀▚▖█ ▗▞▀▘ ▄▄▄  ▄▄▄▄  ▗▞▀▚▖           ▄▄▄  
-        ▐▌ ▐▌▐▛▀▀▘█ ▝▚▄▖█   █ █ █ █ ▐▛▀▀▘    ▗▄▟▙▄▖█   █ 
-        ▐▌ ▐▌▝▚▄▄▖█     ▀▄▄▄▀ █   █ ▝▚▄▄▖      ▐▌  ▀▄▄▄▀ 
-        ▐▙█▟▌     █                            ▐▌        
-                                               ▐▌                                                
+WELCOME TO
+
  ▄▄▄▄   ▓█████  ▄▄▄       ██▀███   ▄▄▄▄    ▄▄▄       ██▓▄▄▄█████▓
 ▓█████▄ ▓█   ▀ ▒████▄    ▓██ ▒ ██▒▓█████▄ ▒████▄    ▓██▒▓  ██▒ ▓▒
 ▒██▒ ▄██▒███   ▒██  ▀█▄  ▓██ ░▄█ ▒▒██▒ ▄██▒██  ▀█▄  ▒██▒▒ ▓██░ ▒░
@@ -28,6 +25,10 @@
 (function () {
     'use strict';
 
+    const SYSTEM_PREAMBLE = `MAL 9000 OS v1.1
+(C) purehavuk Industries, 1974-1979
+
+COMMAND?`;
     const overlay = document.getElementById('terminal-boot');
     const screen = overlay && overlay.querySelector('.terminal-boot-screen');
     const output = document.getElementById('terminal-boot-output');
@@ -35,9 +36,12 @@
     const diagnostic = document.getElementById('terminal-boot-diagnostic');
     if (!overlay || !screen || !output || !status || !diagnostic) return;
 
-    const loadDuration = 7500;
-    const receiveDuration = 5000;
-    const lines = ASCII_ART.replace(/^\n|\s+$/g, '').split('\n');
+    const preambleDuration = 1600;
+    const transferDuration = 9000;
+    const receiveDuration = 6500;
+    const lines = ASCII_ART.replace(/^\n|\s+$/g, '').split('\n').map(function (line) {
+        return line.trimEnd();
+    });
     const totalCharacters = lines.reduce((total, line) => total + line.length + 1, 0);
     const lineMarks = [];
     const diagnostics = [
@@ -124,6 +128,8 @@
 
     document.documentElement.classList.add('terminal-loading');
     overlay.classList.add('active');
+    output.textContent = SYSTEM_PREAMBLE;
+    diagnostic.textContent = '';
 
     let displayedLines = 0;
     const start = performance.now();
@@ -140,9 +146,20 @@
 
     function render(time) {
         const elapsed = time - start;
-        const progress = Math.min(elapsed / loadDuration, 1);
-        const receiveProgress = Math.min(elapsed / receiveDuration, 1);
-        const diagnosticIndex = Math.min(Math.floor(elapsed / (loadDuration / 3)), selectedDiagnostics.length - 1);
+        const transferElapsed = Math.max(elapsed - preambleDuration, 0);
+        const progress = Math.min(transferElapsed / transferDuration, 1);
+        const receiveProgress = Math.min(transferElapsed / receiveDuration, 1);
+        const diagnosticIndex = Math.min(Math.floor(transferElapsed / (transferDuration / 3)), selectedDiagnostics.length - 1);
+
+        if (elapsed < preambleDuration) {
+            status.textContent = 'READY.';
+            window.requestAnimationFrame(render);
+            return;
+        }
+
+        if (displayedLines === 0) {
+            output.textContent = '';
+        }
 
         if (diagnosticIndex !== lastDiagnostic) {
             diagnostic.textContent = '> ' + selectedDiagnostics[diagnosticIndex];
@@ -159,7 +176,7 @@
         }
 
         if (progress < 0.2) {
-            status.textContent = 'DIALING UPLINK... 2400 BPS';
+            status.textContent = 'DIALING UPLINK... 300 BPS';
         } else if (progress < 0.92) {
             status.textContent = 'RECEIVING WELCOME BUFFER... ' + Math.round(progress * 100) + '%';
         } else if (progress < 1) {
