@@ -229,6 +229,42 @@ body {
     filter: blur(0px);
 }
 
+/* CRT glass surface details */
+.crt-glass-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100002;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.crt-reflection {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: block;
+    width: 883px;
+    height: 357px;
+    max-width: none;
+}
+
+.crt-handprint {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    width: 788px;
+    max-width: none;
+    height: auto;
+}
+
+@media (max-width: 788px) {
+    .crt-handprint {
+        width: 100vw;
+        max-width: 100%;
+    }
+}
+
 /* === CRT ANIMATIONS === */
 @keyframes crtFlicker {
 
