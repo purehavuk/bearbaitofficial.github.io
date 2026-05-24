@@ -26,9 +26,10 @@ WELCOME TO
     'use strict';
 
     const SYSTEM_PREAMBLE = `MAL 9000 - UNiX SYSTEM v1.02
-(C) purehavuk Industries, 1976-1979
+(C) purehavuk Industries, 1976-1979 - ALL RIGHTS RESERVED
+Atrificial Intelligence Research Division
 
-COMMAND?`;
+SHALL WE PLAY A GAME?`;
     const overlay = document.getElementById('terminal-boot');
     const screen = overlay && overlay.querySelector('.terminal-boot-screen');
     const output = document.getElementById('terminal-boot-output');
