@@ -89,6 +89,8 @@
         }
 
         const TWO_PI = Math.PI * 2;
+        const bucketCount = 15;
+        const buckets = Array.from({ length: bucketCount }, () => []);
 
         function resize() {
             updateConfig();
@@ -150,8 +152,9 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            const bucketCount = 15;
-            const buckets = Array.from({ length: bucketCount }, () => []);
+            for (let b = 0; b < bucketCount; b++) {
+                buckets[b].length = 0;
+            }
             const radius = config.influenceRadius;
             const radiusSq = radius * radius;
 
@@ -209,9 +212,20 @@
         });
         window.addEventListener('resize', resize);
         window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                cancelAnimationFrame(raf);
+                raf = 0;
+            } else if (!raf) {
+                lastTime = 0;
+                raf = requestAnimationFrame(draw);
+            }
+        });
 
         resize();
-        raf = requestAnimationFrame(draw);
+        if (!document.hidden) {
+            raf = requestAnimationFrame(draw);
+        }
     }
 
     /* ── Layer 1: base field ─────────────────────────────────── */
