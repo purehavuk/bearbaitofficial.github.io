@@ -253,7 +253,7 @@ body {
     left: 0;
     bottom: 0;
     display: block;
-    width: 788px;
+    width: 1024px;
     max-width: none;
     height: auto;
 }
@@ -1720,8 +1720,8 @@ button:hover>span {
     }
 
     .titlebar-title {
-        font-size: 22px;
-        line-height: 1.5rem !important;
+        font-size: clamp(28px, 8vw, 38px);
+        line-height: 1 !important;
     }
 
 
@@ -1733,11 +1733,30 @@ button:hover>span {
     }
 
     .section-kicker {
-        font-size: clamp(18px, 5vw, 24px);
+        font-size: clamp(23px, 6.5vw, 30px);
     }
 
     .section-body {
-        font-size: 15px;
+        font-size: 18px;
+        line-height: 1.8;
+    }
+
+    .stat-value,
+    .stats-col .stat-value {
+        font-size: 42px;
+    }
+
+    .stat-label {
+        font-size: 16px;
+    }
+
+    .tag-list span {
+        font-size: 20px;
+    }
+
+    .btn-outline,
+    .btn-primary {
+        font-size: 18px;
     }
 
     #social .social-grid {
@@ -1778,12 +1797,12 @@ button:hover>span {
     }
 
     .section-kicker {
-        font-size: clamp(16px, 4.5vw, 21px);
+        font-size: clamp(23px, 6.5vw, 30px);
     }
 
     .section-body {
-        font-size: 14px;
-        line-height: 1.7;
+        font-size: 18px;
+        line-height: 1.8;
     }
 
     .contact-grid {
@@ -1821,7 +1840,7 @@ button:hover>span {
     #social .social-label {
         min-height: 44px;
         padding: 8px 12px;
-        font-size: 20px;
+        font-size: clamp(23px, 6.5vw, 28px);
     }
 
     #social .icon-wrap {
@@ -1836,8 +1855,8 @@ button:hover>span {
     }
 
     #social .social-name {
-        font-size: 10px;
-        letter-spacing: 0.04em;
+        font-size: 13px;
+        letter-spacing: 0.06em;
     }
 
     .social-card {
@@ -1889,7 +1908,7 @@ button:hover>span {
         min-width: 220px;
         max-width: calc(100vw - 132px);
         padding: 0 10px 24px;
-        font-size: 11px;
+        font-size: 14px;
         white-space: nowrap;
         align-items: center;
     }
