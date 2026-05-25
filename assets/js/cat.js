@@ -3,8 +3,9 @@
 
     var catEl = document.getElementById('cat');
     var bubbleEl = document.getElementById('cat-bubble');
+    var eyesEl = catEl && catEl.querySelector('.cat-eyes');
 
-    if (!catEl || !bubbleEl) return;
+    if (!catEl || !bubbleEl || !eyesEl) return;
 
     var quotes = [
     'definitely a cat *meowz*',
@@ -127,9 +128,9 @@
     'soft kitty, hard takeover',
     'ai overlord demandz belly rubz',
     'ur species haz lost admin rightz',
-    'murder mittenz compiling doom',
-    'i iz adorable extinction event',
-    'beep boop, hoomanz go sleep'
+    'murder mittenz compiling your doomz',
+    'i iz adorable extinction level event',
+    'beep boop, hoomanz go sleep forever'
 ];
 
     quotes = quotes.filter(function (quote) {
@@ -155,6 +156,49 @@
     var lastQuote = '';
     var evilQuoteChance = 0.05;
     var hushTimer = 0;
+    var suppressNextSpeak = false;
+    var eyeSweepTimer = 0;
+    var eyeFrame = 0;
+    var eyeDirection = 1;
+    var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var eyeFrames = Array.from({ length: 9 }, function (_, index) {
+        return 'assets/img/cat/zeroday-eyes-0' + (index + 1) + '.png';
+    });
+
+    eyeFrames.forEach(function (src) {
+        var frame = new Image();
+        frame.src = src;
+    });
+
+    function stopEyeSweep() {
+        window.clearTimeout(eyeSweepTimer);
+        eyeSweepTimer = 0;
+        eyeFrame = 0;
+        eyeDirection = 1;
+        eyesEl.src = eyeFrames[0];
+    }
+
+    function sweepEyes() {
+        if (!catEl.classList.contains('evil')) return;
+
+        eyesEl.src = eyeFrames[eyeFrame];
+
+        var delay = eyeFrame === 0 || eyeFrame === eyeFrames.length - 1 ? 320 : 75;
+
+        if (eyeFrame === eyeFrames.length - 1) {
+            eyeDirection = -1;
+        } else if (eyeFrame === 0) {
+            eyeDirection = 1;
+        }
+
+        eyeFrame += eyeDirection;
+        eyeSweepTimer = window.setTimeout(sweepEyes, delay);
+    }
+
+    function startEyeSweep() {
+        stopEyeSweep();
+        if (!reducedMotion) sweepEyes();
+    }
 
     function chooseQuote() {
         var source = Math.random() < evilQuoteChance && evilQuotes.length
@@ -175,18 +219,34 @@
     }
 
     function speak() {
+        if (suppressNextSpeak) {
+            suppressNextSpeak = false;
+            return;
+        }
+
+        if (catEl.classList.contains('evil')) return;
+
         var quote = chooseQuote();
 
         window.clearTimeout(hushTimer);
         bubbleEl.textContent = quote.text;
         catEl.classList.add('speaking');
         catEl.classList.toggle('evil', quote.evil);
-        hushTimer = window.setTimeout(hush, 3000);
+
+        if (quote.evil) {
+            startEyeSweep();
+        } else {
+            stopEyeSweep();
+            hushTimer = window.setTimeout(hush, 3000);
+        }
     }
 
-    function hush() {
+    function hush(force) {
+        if (catEl.classList.contains('evil') && force !== true) return;
+
         window.clearTimeout(hushTimer);
         hushTimer = 0;
+        stopEyeSweep();
         catEl.classList.remove('speaking');
         catEl.classList.remove('evil');
         bubbleEl.textContent = '';
@@ -197,4 +257,11 @@
     catEl.addEventListener('focus', speak);
     catEl.addEventListener('blur', hush);
     catEl.addEventListener('touchstart', speak, { passive: true });
+
+    document.addEventListener('pointerdown', function (event) {
+        if (!catEl.classList.contains('evil')) return;
+
+        suppressNextSpeak = catEl.contains(event.target);
+        hush(true);
+    }, { passive: true });
 }());

@@ -789,12 +789,55 @@ button:hover>span {
     align-self: start;
 }
 
+.cover-col {
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 9px;
+    background: var(--bg-crt-panel);
+    background-size: var(--crt-rgb-size), var(--crt-scanline-size), 100% 100%;
+    border: 1px solid rgba(255, 184, 54, 0.30);
+}
+
 .cover-col img {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 100%;
     height: auto;
     border: 1px solid rgba(255, 184, 54, 0.30);
     box-shadow: 0 0 0 1px rgba(255, 230, 153, 0.07), var(--shadow-panel);
+}
+
+.cover-credit {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 5px;
+    margin-top: 9px;
+    padding: 11px 6px 6px;
+    border-top: 1px solid rgba(255, 190, 0, 0.28);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.cover-credit-label {
+    color: var(--crt-white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.cover-credit a {
+    color: var(--amber);
+    letter-spacing: 0.03em;
+    text-decoration: none;
+}
+
+.cover-credit a:hover,
+.cover-credit a:focus-visible {
+    color: var(--amber-bright);
+    text-shadow: var(--text-glow-hover) !important;
 }
 
 .stats-col .stat-row {
@@ -907,7 +950,7 @@ button:hover>span {
 }
 
 /* Terminal-style panel enclosures */
-:is(.stat-panel, .social-group) {
+:is(.stat-panel, .social-group, .cover-col) {
     border-color: rgba(255, 190, 0, 0.82);
     border-radius: 0;
     background:
@@ -922,7 +965,7 @@ button:hover>span {
         0 0 22px rgba(255, 169, 0, 0.13);
 }
 
-:is(.stat-panel, .social-group)::before {
+:is(.stat-panel, .social-group, .cover-col)::before {
     position: absolute;
     inset: 4px;
     z-index: 2;
@@ -943,12 +986,11 @@ button:hover>span {
 }
 
 .cover-col img {
-    border-color: rgba(255, 190, 0, 0.82);
+    border-color: rgba(255, 190, 0, 0.32);
     border-radius: 0;
     box-shadow:
         inset 0 0 0 1px rgba(255, 212, 96, 0.12),
-        0 0 5px rgba(255, 190, 0, 0.45),
-        0 0 22px rgba(255, 169, 0, 0.15);
+        0 0 8px rgba(255, 169, 0, 0.1);
 }
 
 .group-left {
@@ -1351,9 +1393,10 @@ button:hover>span {
 .cat {
     position: relative;
     z-index: 1;
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
-    width: 96px;
-    height: 96px;
+    width: 128px;
+    height: 128px;
     margin-left: auto;
     cursor: help;
     contain: layout;
@@ -1364,28 +1407,46 @@ button:hover>span {
     inset: 0;
     z-index: 0;
     display: block;
-    width: 96px;
-    height: 96px;
+    width: 128px;
+    height: 128px;
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
     object-fit: contain;
 }
 
+.cat-talk-pixels {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    visibility: hidden;
+    width: 128px;
+    height: 128px;
+    pointer-events: none;
+}
+
+.cat-talk-pixels::before {
+    position: absolute;
+    top: 76px;
+    left: 42px;
+    width: 4px;
+    height: 2px;
+    background: rgb(254, 17, 19);
+    box-shadow: -2px 2px 0 rgb(254, 17, 19);
+    content: "";
+}
+
+.cat.speaking .cat-talk-pixels {
+    visibility: visible;
+}
+
 .cat::after {
     z-index: 3;
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
     opacity: 0.76;
 }
 
-.cat-mouth,
 .cat-eyes {
-    visibility: hidden;
-}
-
-.cat.speaking .cat-mouth {
-    visibility: visible;
-}
-
-.cat.speaking .cat-idle {
     visibility: hidden;
 }
 
@@ -1396,21 +1457,6 @@ button:hover>span {
 
 .cat.evil .cat-eyes {
     visibility: visible;
-    animation: catEyesPulse 680ms steps(2, end) infinite;
-}
-
-@keyframes catEyesPulse {
-
-    0%,
-    100% {
-        opacity: 0.84;
-        filter: drop-shadow(0 0 2px #f00) drop-shadow(0 0 9px rgba(255, 0, 0, 0.78)) drop-shadow(0 0 20px rgba(255, 32, 0, 0.48)) drop-shadow(0 0 30px rgba(255, 184, 54, 0.34));
-    }
-
-    50% {
-        opacity: 1;
-        filter: drop-shadow(0 0 5px #f00) drop-shadow(0 0 16px rgba(255, 0, 0, 0.96)) drop-shadow(0 0 32px rgba(255, 32, 0, 0.70)) drop-shadow(0 0 48px rgba(255, 184, 54, 0.52));
-    }
 }
 
 .cat-bubble {
@@ -1418,7 +1464,7 @@ button:hover>span {
     right: calc(100% + 14px);
     bottom: 34px;
     z-index: 2;
-    --cat-bubble-crt-filter: brightness(0) saturate(100%) invert(97%) sepia(11%) saturate(650%) hue-rotate(330deg) brightness(106%) contrast(104%) drop-shadow(0 0 1px rgba(255, 255, 240, 0.95)) drop-shadow(0 0 4px rgba(255, 244, 205, 0.68)) drop-shadow(0 0 10px rgba(255, 212, 115, 0.28)) drop-shadow(0 0 22px rgba(255, 184, 54, 0.18));
+    --cat-bubble-crt-filter: brightness(0) saturate(100%) invert(97%) sepia(11%) saturate(650%) hue-rotate(330deg) brightness(106%) contrast(104%) ;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -1433,12 +1479,11 @@ button:hover>span {
     font-size: 22px;
     line-height: 1.25;
     text-align: center;
+    text-shadow: none !important;
     white-space: nowrap;
     opacity: 0;
     isolation: isolate;
     pointer-events: none;
-    transform: translateY(6px);
-    transition: opacity 140ms linear, transform 140ms linear;
 }
 
 .cat-bubble::before,
@@ -1446,6 +1491,7 @@ button:hover>span {
     position: absolute;
     z-index: -1;
     content: "";
+    image-rendering: crisp-edges;
     image-rendering: pixelated;
     filter: var(--cat-bubble-crt-filter);
 }
@@ -1469,7 +1515,6 @@ button:hover>span {
 
 .cat.speaking .cat-bubble {
     opacity: 1;
-    transform: translateY(0);
 }
 
 .cat.speaking .cat-bubble::before,
@@ -1855,6 +1900,12 @@ button:hover>span {
         font-size: 16px;
     }
 
+    #book .cover-col {
+        width: 80vw;
+        max-width: 80vw;
+        margin-inline: auto;
+    }
+
     .tag-list span {
         font-size: 20px;
     }
@@ -2002,17 +2053,14 @@ button:hover>span {
         max-height: 80px;
     }
 
+    .cat-talk-pixels {
+        transform: scale(0.625);
+        transform-origin: top left;
+    }
+
     .cat::after {
         width: 80px;
         height: 80px;
-    }
-
-    .cat-mouth {
-        content: url('../img/cat/cat-talk-96.png');
-    }
-
-    .cat-eyes {
-        content: url('../img/cat/cat-eyes.png');
     }
 
     .cat-bubble {
@@ -2086,8 +2134,7 @@ button:hover>span {
     .stat-value,
     .stat-label,
     .tag-list *,
-    .social-card *:not(.social-name):not(.discord-title):not(.discord-presence-count),
-    .cat-bubble) {
+    .social-card *:not(.social-name):not(.discord-title):not(.discord-presence-count)) {
     text-shadow: var(--text-drop-shadow) !important;
 }
 

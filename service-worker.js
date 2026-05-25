@@ -1,7 +1,7 @@
 'use strict';
 
 // Increment this when a deployment must replace precached assets immediately.
-const CACHE_NAME = 'bearbait-static-v2';
+const CACHE_NAME = 'bearbait-static-v11';
 const SITE_ASSETS = [
     './',
     './index.html',
@@ -32,9 +32,16 @@ const SITE_ASSETS = [
     './assets/img/social/facebook-color.png',
     './assets/img/social/discord-white.png',
     './assets/img/social/discord-color.png',
-    './assets/img/cat/cat-96.png',
-    './assets/img/cat/cat-talk-96.png',
-    './assets/img/cat/cat-eyes.png',
+    './assets/img/cat/zeroday.png',
+    './assets/img/cat/zeroday-eyes-01.png',
+    './assets/img/cat/zeroday-eyes-02.png',
+    './assets/img/cat/zeroday-eyes-03.png',
+    './assets/img/cat/zeroday-eyes-04.png',
+    './assets/img/cat/zeroday-eyes-05.png',
+    './assets/img/cat/zeroday-eyes-06.png',
+    './assets/img/cat/zeroday-eyes-07.png',
+    './assets/img/cat/zeroday-eyes-08.png',
+    './assets/img/cat/zeroday-eyes-09.png',
     './assets/img/cat/pixel-speech-bubble.png',
     './assets/img/cat/pixel-speech-bubble-tail.png'
 ];
