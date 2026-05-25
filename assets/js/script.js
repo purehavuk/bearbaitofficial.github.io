@@ -118,4 +118,34 @@ OPEN "OUTBOUND RELAY",8,1
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // run once on load
 
+    const discordCard = document.querySelector('.discord-card[data-discord-widget-url]');
+    if (discordCard) {
+        const presence = discordCard.querySelector('.discord-presence');
+        const presenceCount = discordCard.querySelector('.discord-presence-count');
+        const widgetUrl = discordCard.dataset.discordWidgetUrl;
+
+        function updateDiscordPresence() {
+            fetch(widgetUrl, { headers: { Accept: 'application/json' } })
+                .then(response => {
+                    if (!response.ok) throw new Error('Discord widget request failed');
+                    return response.json();
+                })
+                .then(widget => {
+                    const count = Number(widget.presence_count);
+                    if (!Number.isFinite(count) || !presence || !presenceCount) return;
+
+                    presenceCount.textContent = `${count.toLocaleString()} ONLINE`;
+                    presence.hidden = false;
+                    discordCard.setAttribute('aria-label', `Discord, ${count.toLocaleString()} members online`);
+                })
+                .catch(() => {
+                    if (presence) presence.hidden = true;
+                    discordCard.setAttribute('aria-label', 'Discord');
+                });
+        }
+
+        updateDiscordPresence();
+        window.setInterval(updateDiscordPresence, 5 * 60 * 1000);
+    }
+
 })();
