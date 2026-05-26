@@ -165,12 +165,17 @@
     var eyeDirection = 1;
     var evilDisplayCount = 0;
     var easterEggActive = false;
+    var sceneAudioPrimed = false;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var eyeFrames = Array.from({ length: 9 }, function (_, index) {
         return 'assets/img/cat/zeroday-eyes-0' + (index + 1) + '.png';
     });
     var finalForm = new Image();
+    var acquireAudio = new Audio('assets/audio/target-acquired.mp3');
+    var explosionAudio = new Audio('assets/audio/explosion.mp3');
     finalForm.src = 'assets/img/cat/zeroday-ASCII.webp';
+    acquireAudio.preload = 'auto';
+    explosionAudio.preload = 'auto';
 
     eyeFrames.forEach(function (src) {
         var frame = new Image();
@@ -207,6 +212,34 @@
         if (!reducedMotion) sweepEyes();
     }
 
+    function playSceneAudio(audio) {
+        audio.currentTime = 0;
+        var playback = audio.play();
+        if (playback) playback.catch(function () {});
+    }
+
+    function primeSceneAudio() {
+        if (sceneAudioPrimed) return;
+
+        sceneAudioPrimed = true;
+        [acquireAudio, explosionAudio].forEach(function (audio) {
+            audio.muted = true;
+            var playback = audio.play();
+            if (!playback) {
+                audio.muted = false;
+                return;
+            }
+
+            playback.then(function () {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.muted = false;
+            }).catch(function () {
+                audio.muted = false;
+            });
+        });
+    }
+
     function reticlePosition(x, y, scale) {
         return 'translate(-50%, -50%) translate(' + x + 'px, ' + y + 'px) scale(' + scale + ')';
     }
@@ -238,6 +271,7 @@
 
     function detonateEasterEgg() {
         stopEyeSweep();
+        playSceneAudio(explosionAudio);
         idleEl.src = finalForm.src;
         catEl.classList.add('terminated');
         catEl.removeAttribute('tabindex');
@@ -265,6 +299,7 @@
         window.setTimeout(function () {
             bubbleEl.textContent = 'Target Aquired';
             catEl.classList.add('speaking');
+            playSceneAudio(acquireAudio);
             window.setTimeout(detonateEasterEgg, 1000);
         }, 5500);
 
@@ -339,6 +374,7 @@
     catEl.addEventListener('touchstart', speak, { passive: true });
 
     document.addEventListener('pointerdown', function (event) {
+        primeSceneAudio();
         if (easterEggActive) return;
         if (!catEl.classList.contains('evil')) return;
 

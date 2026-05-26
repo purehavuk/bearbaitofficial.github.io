@@ -1,7 +1,7 @@
 'use strict';
 
 // Increment this when a deployment must replace precached assets immediately.
-const CACHE_NAME = 'bearbait-static-v13';
+const CACHE_NAME = 'bearbait-static-v14';
 const SITE_ASSETS = [
     './',
     './index.html',
@@ -46,7 +46,9 @@ const SITE_ASSETS = [
     './assets/img/cat/zeroday-termination.png',
     './assets/img/cat/zeroday-ASCII.webp',
     './assets/img/cat/pixel-speech-bubble.png',
-    './assets/img/cat/pixel-speech-bubble-tail.png'
+    './assets/img/cat/pixel-speech-bubble-tail.png',
+    './assets/audio/target-acquired.mp3',
+    './assets/audio/explosion.mp3'
 ];
 
 self.addEventListener('install', function (event) {
