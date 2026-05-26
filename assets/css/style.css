@@ -1522,6 +1522,90 @@ button:hover>span {
     animation: crtSurfaceDeconverge 750ms steps(1, end) 1 both;
 }
 
+.zeroday-easter-egg {
+    position: fixed;
+    inset: 0;
+    z-index: 100003;
+    display: none;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.zeroday-easter-egg.active {
+    display: block;
+}
+
+.zeroday-termination {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    opacity: 0;
+}
+
+.zeroday-reticle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 2;
+    display: none;
+    width: 128px;
+    height: 128px;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 2px rgba(255, 32, 32, 0.98)) drop-shadow(0 0 12px rgba(255, 0, 0, 0.72));
+    transform: translate(-50%, -50%);
+}
+
+.zeroday-easter-egg.targeting .zeroday-reticle {
+    display: block;
+}
+
+.zeroday-flash {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    opacity: 0;
+}
+
+.zeroday-easter-egg.detonating .zeroday-termination {
+    opacity: 1;
+    animation: zerodayTerminationFade 1.25s ease-in 5s forwards;
+}
+
+.zeroday-easter-egg.detonating .zeroday-flash {
+    animation: zerodayFlash 2s linear forwards;
+}
+
+@keyframes zerodayFlash {
+    0% {
+        background: #fff;
+        opacity: 1;
+    }
+
+    50% {
+        background: #f8e531;
+        opacity: 1;
+    }
+
+    100% {
+        background: #f8e531;
+        opacity: 0;
+    }
+}
+
+@keyframes zerodayTerminationFade {
+    to {
+        opacity: 0;
+    }
+}
+
 /* === SCROLLBARS === */
 * {
     scrollbar-width: thin;

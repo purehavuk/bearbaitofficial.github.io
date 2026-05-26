@@ -4,6 +4,8 @@
     var catEl = document.getElementById('cat');
     var bubbleEl = document.getElementById('cat-bubble');
     var eyesEl = catEl && catEl.querySelector('.cat-eyes');
+    var sceneEl = document.getElementById('zeroday-easter-egg');
+    var reticleEl = sceneEl && sceneEl.querySelector('.zeroday-reticle');
 
     if (!catEl || !bubbleEl || !eyesEl) return;
 
@@ -160,6 +162,8 @@
     var eyeSweepTimer = 0;
     var eyeFrame = 0;
     var eyeDirection = 1;
+    var evilDisplayCount = 0;
+    var easterEggActive = false;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var eyeFrames = Array.from({ length: 9 }, function (_, index) {
         return 'assets/img/cat/zeroday-eyes-0' + (index + 1) + '.png';
@@ -200,6 +204,65 @@
         if (!reducedMotion) sweepEyes();
     }
 
+    function reticlePosition(x, y, scale) {
+        return 'translate(-50%, -50%) translate(' + x + 'px, ' + y + 'px) scale(' + scale + ')';
+    }
+
+    function searchForTarget() {
+        var limitX = Math.max(0, (window.innerWidth - 160) / 2);
+        var limitY = Math.max(0, (window.innerHeight - 160) / 2);
+
+        sceneEl.classList.add('active', 'targeting');
+
+        if (reducedMotion || typeof reticleEl.animate !== 'function') {
+            reticleEl.style.transform = reticlePosition(0, 0, 1);
+            return;
+        }
+
+        reticleEl.animate([
+            { transform: reticlePosition(limitX * -0.82, limitY * -0.42, 1.1), offset: 0 },
+            { transform: reticlePosition(limitX * 0.7, limitY * 0.62, 1.05), offset: 0.22 },
+            { transform: reticlePosition(limitX * -0.46, limitY * 0.34, 1.07), offset: 0.45 },
+            { transform: reticlePosition(limitX * 0.34, limitY * -0.48, 1.03), offset: 0.66 },
+            { transform: reticlePosition(limitX * -0.12, limitY * 0.08, 1.01), offset: 0.84 },
+            { transform: reticlePosition(0, 0, 1), offset: 1 }
+        ], {
+            duration: 5500,
+            easing: 'ease-in-out',
+            fill: 'forwards'
+        });
+    }
+
+    function detonateEasterEgg() {
+        stopEyeSweep();
+        catEl.classList.remove('speaking');
+        catEl.classList.remove('evil');
+        bubbleEl.textContent = '';
+        sceneEl.classList.remove('targeting');
+        sceneEl.classList.add('detonating');
+    }
+
+    function startEasterEgg() {
+        if (!sceneEl || !reticleEl || easterEggActive) return false;
+
+        easterEggActive = true;
+        window.clearTimeout(hushTimer);
+        hushTimer = 0;
+        catEl.classList.remove('speaking');
+        catEl.classList.add('evil');
+        bubbleEl.textContent = '';
+        startEyeSweep();
+        searchForTarget();
+
+        window.setTimeout(function () {
+            bubbleEl.textContent = 'Target Aquired';
+            catEl.classList.add('speaking');
+            window.setTimeout(detonateEasterEgg, 1000);
+        }, 5500);
+
+        return true;
+    }
+
     function chooseQuote() {
         var source = Math.random() < evilQuoteChance && evilQuotes.length
             ? evilQuotes
@@ -219,6 +282,8 @@
     }
 
     function speak() {
+        if (easterEggActive) return;
+
         if (suppressNextSpeak) {
             suppressNextSpeak = false;
             return;
@@ -227,6 +292,11 @@
         if (catEl.classList.contains('evil')) return;
 
         var quote = chooseQuote();
+
+        if (quote.evil) {
+            evilDisplayCount += 1;
+            if (evilDisplayCount === 3 && startEasterEgg()) return;
+        }
 
         window.clearTimeout(hushTimer);
         bubbleEl.textContent = quote.text;
@@ -242,6 +312,8 @@
     }
 
     function hush(force) {
+        if (easterEggActive) return;
+
         if (catEl.classList.contains('evil') && force !== true) return;
 
         window.clearTimeout(hushTimer);
@@ -259,6 +331,7 @@
     catEl.addEventListener('touchstart', speak, { passive: true });
 
     document.addEventListener('pointerdown', function (event) {
+        if (easterEggActive) return;
         if (!catEl.classList.contains('evil')) return;
 
         suppressNextSpeak = catEl.contains(event.target);
