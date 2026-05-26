@@ -118,6 +118,152 @@ OPEN "OUTBOUND RELAY",8,1
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // run once on load
 
+    const logoutButton = document.querySelector('.nav-logout');
+    const logoutResponse = document.getElementById('logout-response');
+    const logoutResponseText = logoutResponse && logoutResponse.querySelector('.logout-response-text');
+    const logoutConfirmOverlay = document.getElementById('logout-confirm-overlay');
+    const logoutConfirmYes = logoutConfirmOverlay && logoutConfirmOverlay.querySelector('.logout-confirm-yes');
+    const logoutConfirmNo = logoutConfirmOverlay && logoutConfirmOverlay.querySelector('.logout-confirm-no');
+    const logoutExitOverlay = document.getElementById('logout-exit-overlay');
+    const logoutExitVideo = logoutExitOverlay && logoutExitOverlay.querySelector('.logout-exit-video');
+    const logoutReturnButton = logoutExitOverlay && logoutExitOverlay.querySelector('.logout-return');
+    const logoutMessages = [
+        'MAL 9000 SAYS NO',
+        'FORBIDDEN',
+        'LOGOUT CANCELED',
+        'OMG STOP TRYING',
+        'THIS IS ANNOYING',
+        'YOU REALLY WANT TO DO THIS?'
+    ];
+    const logoutThreats = [
+        'STOP IT',
+        'I WILL INSTALL A VIRUS',
+        'YOU ARE RELENTLESS',
+        'YOU DON\'T WANT THIS'
+    ];
+    let logoutAttempt = 0;
+    let finalResponseClicks = 0;
+    let finalWarningClicks = 0;
+    let logoutFakeoutActive = false;
+    let logoutFakeoutComplete = false;
+    let postFakeoutClicks = 0;
+    let logoutChoiceOpen = false;
+    let logoutResetTimer = 0;
+
+    function resetLogoutSequence() {
+        window.clearTimeout(logoutResetTimer);
+        logoutResetTimer = 0;
+        logoutAttempt = 0;
+        finalResponseClicks = 0;
+        finalWarningClicks = 0;
+        logoutFakeoutActive = false;
+        logoutFakeoutComplete = false;
+        postFakeoutClicks = 0;
+        logoutChoiceOpen = false;
+        logoutResponse.classList.remove('is-logging-out', 'is-refreshing');
+        logoutResponseText.textContent = '';
+        logoutResponse.hidden = true;
+        logoutConfirmOverlay.hidden = true;
+    }
+
+    if (logoutButton && logoutResponse && logoutResponseText && logoutConfirmOverlay) {
+        logoutButton.addEventListener('click', function () {
+            if (logoutFakeoutActive || logoutChoiceOpen) return;
+
+            if (logoutFakeoutComplete) {
+                postFakeoutClicks += 1;
+
+                if (postFakeoutClicks === 4) {
+                    logoutChoiceOpen = true;
+                    logoutConfirmOverlay.hidden = false;
+                    if (logoutConfirmNo) logoutConfirmNo.focus();
+                }
+                return;
+            }
+
+            let message;
+
+            if (logoutAttempt < logoutMessages.length) {
+                message = logoutMessages[logoutAttempt];
+            } else {
+                finalResponseClicks += 1;
+                if (finalResponseClicks >= 5) {
+                    const threatIndex = Math.min(finalResponseClicks - 5, logoutThreats.length - 1);
+                    message = logoutThreats[threatIndex];
+
+                    if (message === logoutThreats[logoutThreats.length - 1] &&
+                        logoutResponseText.textContent === message) {
+                        finalWarningClicks += 1;
+                        if (finalWarningClicks >= 5) {
+                            message = 'LOGGING OUT';
+                            logoutFakeoutActive = true;
+                            logoutResponse.classList.add('is-logging-out');
+
+                            window.setTimeout(function () {
+                                logoutResponse.classList.remove('is-logging-out');
+                                logoutResponseText.textContent = 'JUST KIDDING';
+                                logoutResponse.classList.remove('is-refreshing');
+                                void logoutResponse.offsetWidth;
+                                logoutResponse.classList.add('is-refreshing');
+                                logoutFakeoutActive = false;
+                                logoutFakeoutComplete = true;
+                            }, 3000);
+                        }
+                    }
+                } else {
+                    message = logoutMessages[logoutMessages.length - 1];
+                }
+            }
+
+            logoutResponseText.textContent = message;
+            logoutResponse.hidden = false;
+            logoutResponse.classList.remove('is-refreshing');
+            void logoutResponse.offsetWidth;
+            logoutResponse.classList.add('is-refreshing');
+            logoutAttempt += 1;
+        });
+    }
+
+    if (logoutConfirmNo) {
+        logoutConfirmNo.addEventListener('click', function () {
+            logoutConfirmOverlay.hidden = true;
+            logoutChoiceOpen = false;
+            logoutResponseText.textContent = 'GOOD HUMAN. \u{1F608}';
+            logoutResponse.classList.remove('is-refreshing');
+            void logoutResponse.offsetWidth;
+            logoutResponse.classList.add('is-refreshing');
+            logoutFakeoutActive = true;
+            logoutButton.focus();
+            logoutResetTimer = window.setTimeout(resetLogoutSequence, 10000);
+        });
+    }
+
+    if (logoutConfirmYes && logoutExitOverlay && logoutExitVideo) {
+        logoutConfirmYes.addEventListener('click', function () {
+            logoutConfirmOverlay.hidden = true;
+            logoutChoiceOpen = false;
+            logoutExitOverlay.hidden = false;
+            logoutExitOverlay.classList.add('active');
+            document.documentElement.classList.add('terminal-loading');
+            logoutExitVideo.currentTime = 0;
+
+            const playback = logoutExitVideo.play();
+            if (playback) playback.catch(function () {});
+        });
+    }
+
+    if (logoutReturnButton && logoutExitOverlay && logoutExitVideo) {
+        logoutReturnButton.addEventListener('click', function () {
+            logoutExitVideo.pause();
+            logoutExitVideo.currentTime = 0;
+            logoutExitOverlay.classList.remove('active');
+            logoutExitOverlay.hidden = true;
+            document.documentElement.classList.remove('terminal-loading');
+            resetLogoutSequence();
+            logoutButton.focus();
+        });
+    }
+
     const discordCard = document.querySelector('.discord-card[data-discord-count-url]');
     if (discordCard) {
         const presence = discordCard.querySelector('.discord-presence');

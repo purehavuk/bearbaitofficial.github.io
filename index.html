@@ -122,6 +122,34 @@
 
             </div>
         </aside>
+        <div class="logout-response" id="logout-response" role="status" aria-live="polite" aria-atomic="true" hidden>
+            <span class="logout-response-prefix">SYSTEM //</span>
+            <span class="logout-response-text"></span>
+        </div>
+        <div class="logout-confirm-overlay" id="logout-confirm-overlay" hidden>
+            <div class="logout-confirm" role="dialog" aria-modal="true" aria-labelledby="logout-confirm-prompt">
+                <p class="logout-confirm-prompt" id="logout-confirm-prompt">ARE YOU SURE?:</p>
+                <div class="logout-confirm-actions">
+                    <button class="btn-primary logout-confirm-yes" type="button">YES</button>
+                    <button class="btn-primary logout-confirm-no" type="button">NO</button>
+                </div>
+            </div>
+        </div>
+        <div class="terminal-boot-overlay terminal-relay-overlay logout-exit-overlay" id="logout-exit-overlay"
+            role="status" aria-label="Logging out of BearBait Official" hidden>
+            <div class="terminal-boot-screen logout-exit-screen">
+                <div class="terminal-boot-header">
+                    <span>MAL 9000 - SYSTEM LOGOUT</span>
+                    <span>SESSION TERMINATION</span>
+                </div>
+                <video class="logout-exit-video" playsinline preload="metadata">
+                    <source src="assets/video/bearbait-creepy-exit.webm" type="video/webm">
+                </video>
+                <div class="logout-exit-controls">
+                    <button class="btn-primary logout-return" type="button">RETURN TO SYSTEM</button>
+                </div>
+            </div>
+        </div>
 
         <main class="main-content">
 
