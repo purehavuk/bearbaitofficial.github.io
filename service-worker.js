@@ -1,7 +1,7 @@
 'use strict';
 
 // Increment this when a deployment must replace precached assets immediately.
-const CACHE_NAME = 'bearbait-static-v39';
+const CACHE_NAME = 'bearbait-static-v40';
 const SITE_ASSETS = [
     './',
     './index.html',
@@ -53,10 +53,29 @@ const SITE_ASSETS = [
     './assets/audio/explosion.mp3'
 ];
 
+function scopedUrl(path) {
+    return new URL(path, self.registration.scope).href;
+}
+
+function fetchAndCache(request, cacheKey) {
+    return fetch(request, { cache: 'no-cache' }).then(function (networkResponse) {
+        if (!networkResponse.ok) return networkResponse;
+
+        const responseCopy = networkResponse.clone();
+        return caches.open(CACHE_NAME).then(function (cache) {
+            return cache.put(cacheKey || request, responseCopy);
+        }).then(function () {
+            return networkResponse;
+        });
+    });
+}
+
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(CACHE_NAME).then(function (cache) {
-            return cache.addAll(SITE_ASSETS);
+            return cache.addAll(SITE_ASSETS.map(function (asset) {
+                return new Request(scopedUrl(asset), { cache: 'reload' });
+            }));
         }).then(function () {
             return self.skipWaiting();
         })
@@ -87,43 +106,16 @@ self.addEventListener('fetch', function (event) {
 
     if (event.request.mode === 'navigate') {
         event.respondWith(
-            fetch(event.request).then(function (networkResponse) {
-                if (!networkResponse.ok) return networkResponse;
-
-                const responseCopy = networkResponse.clone();
-                return caches.open(CACHE_NAME).then(function (cache) {
-                    return cache.put('./index.html', responseCopy);
-                }).then(function () {
-                    return networkResponse;
-                });
-            }).catch(function () {
-                return caches.match('./index.html');
+            fetchAndCache(event.request, scopedUrl('./index.html')).catch(function () {
+                return caches.match(scopedUrl('./index.html'));
             })
         );
         return;
     }
 
     event.respondWith(
-        caches.match(event.request).then(function (cachedResponse) {
-            const networkRequest = fetch(event.request).then(function (networkResponse) {
-                if (!networkResponse.ok) return networkResponse;
-
-                const responseCopy = networkResponse.clone();
-                return caches.open(CACHE_NAME).then(function (cache) {
-                    return cache.put(event.request, responseCopy);
-                }).then(function () {
-                    return networkResponse;
-                });
-            });
-
-            if (cachedResponse) {
-                event.waitUntil(networkRequest.catch(function () {
-                    return undefined;
-                }));
-                return cachedResponse;
-            }
-
-            return networkRequest;
+        fetchAndCache(event.request).catch(function () {
+            return caches.match(event.request);
         })
     );
 });

@@ -23,7 +23,23 @@
     <link rel="stylesheet" href="assets/css/antigravity-field.css">
     <script>
         if ('serviceWorker' in navigator && window.isSecureContext) {
-            navigator.serviceWorker.register('./service-worker.js').catch(function () {});
+            (function () {
+                var hadController = Boolean(navigator.serviceWorker.controller);
+                var reloading = false;
+
+                navigator.serviceWorker.addEventListener('controllerchange', function () {
+                    if (!hadController || reloading) return;
+
+                    reloading = true;
+                    window.location.reload();
+                });
+
+                navigator.serviceWorker.register('./service-worker.js', {
+                    updateViaCache: 'none'
+                }).then(function (registration) {
+                    return registration.update();
+                }).catch(function () {});
+            }());
         }
     </script>
 </head>
