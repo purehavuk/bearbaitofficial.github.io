@@ -3,11 +3,12 @@
 
     var catEl = document.getElementById('cat');
     var bubbleEl = document.getElementById('cat-bubble');
+    var idleEl = catEl && catEl.querySelector('.cat-idle');
     var eyesEl = catEl && catEl.querySelector('.cat-eyes');
     var sceneEl = document.getElementById('zeroday-easter-egg');
     var reticleEl = sceneEl && sceneEl.querySelector('.zeroday-reticle');
 
-    if (!catEl || !bubbleEl || !eyesEl) return;
+    if (!catEl || !bubbleEl || !idleEl || !eyesEl) return;
 
     var quotes = [
     'definitely a cat *meowz*',
@@ -168,6 +169,8 @@
     var eyeFrames = Array.from({ length: 9 }, function (_, index) {
         return 'assets/img/cat/zeroday-eyes-0' + (index + 1) + '.png';
     });
+    var finalForm = new Image();
+    finalForm.src = 'assets/img/cat/zeroday-ASCII.webp';
 
     eyeFrames.forEach(function (src) {
         var frame = new Image();
@@ -235,6 +238,11 @@
 
     function detonateEasterEgg() {
         stopEyeSweep();
+        idleEl.src = finalForm.src;
+        catEl.classList.add('terminated');
+        catEl.removeAttribute('tabindex');
+        catEl.removeAttribute('role');
+        catEl.setAttribute('aria-label', 'ZeroDay terminated');
         catEl.classList.remove('speaking');
         catEl.classList.remove('evil');
         bubbleEl.textContent = '';

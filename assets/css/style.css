@@ -1459,6 +1459,16 @@ button:hover>span {
     visibility: visible;
 }
 
+.cat.terminated {
+    cursor: default;
+    pointer-events: none;
+}
+
+.cat.terminated .cat-talk-pixels,
+.cat.terminated .cat-eyes {
+    visibility: hidden;
+}
+
 .cat-bubble {
     position: absolute;
     right: calc(100% + 14px);
