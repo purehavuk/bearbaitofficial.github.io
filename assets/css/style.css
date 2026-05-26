@@ -1540,7 +1540,8 @@ button:hover>span {
 }
 
 .logout-response-prefix,
-.logout-response-text {
+.logout-response-text,
+.logout-response-devil {
     position: relative;
     z-index: 2;
 }
@@ -1604,6 +1605,16 @@ button:hover>span {
 
 .logout-response.is-joking .logout-response-prefix {
     color: var(--amber) !important;
+}
+
+.logout-response-devil {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    filter: hue-rotate(90deg) saturate(2.2) brightness(1.08);
+    text-shadow: 0 0 8px rgba(255, 32, 32, 0.78) !important;
+}
+
+.logout-response-devil[hidden] {
+    display: none;
 }
 
 .logout-confirm-overlay {

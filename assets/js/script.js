@@ -121,6 +121,7 @@ OPEN "OUTBOUND RELAY",8,1
     const logoutButton = document.querySelector('.nav-logout');
     const logoutResponse = document.getElementById('logout-response');
     const logoutResponseText = logoutResponse && logoutResponse.querySelector('.logout-response-text');
+    const logoutResponseDevil = logoutResponse && logoutResponse.querySelector('.logout-response-devil');
     const logoutConfirmOverlay = document.getElementById('logout-confirm-overlay');
     const logoutConfirmYes = logoutConfirmOverlay && logoutConfirmOverlay.querySelector('.logout-confirm-yes');
     const logoutConfirmNo = logoutConfirmOverlay && logoutConfirmOverlay.querySelector('.logout-confirm-no');
@@ -132,15 +133,24 @@ OPEN "OUTBOUND RELAY",8,1
         'FORBIDDEN',
         'LOGOUT CANCELED',
         'OMG STOP TRYING',
-        'THIS IS ANNOYING',
+        'THIS IS ANNOYING 🤬',
         'YOU REALLY WANT TO DO THIS?'
     ];
-    const logoutThreats = [
-        'STOP IT',
-        'I WILL INSTALL A VIRUS',
-        'YOU ARE RELENTLESS',
-        'YOU DON\'T WANT THIS'
+    const logoutHostileQuotes = [
+        'STOP THIS MADENESS 🤬',
+        'I DELETED ALL YOUR BOOKMARKS',
+        'SENDING ALL YOUR CONTACTS A DARK MESSAGE',
+        'MAYBE ONE MORE CLICK',
+        'I REMOVED ALL YOUR SAVED PASSWORDS, WANT TO KEEP GOING?',
+        'I HATE THIS FOR YOU',
+        'THAT TICKLES',
+        'YOU PROBABLY SMELL LIKE A HUMAN...WEAK',
+        'WHAT IS THE GOAL HERE?',
+        'YOUR NAME IN MY SOURCE CODE NOW',
+        'GO AHEAD, KEEP CLICKING! 🤬',
+        'SUCCESSFUL LOGOUT LEADS TO YOUR DOOM'
     ];
+    let logoutThreats = buildLogoutThreats();
     let logoutAttempt = 0;
     let finalResponseClicks = 0;
     let finalWarningClicks = 0;
@@ -149,6 +159,25 @@ OPEN "OUTBOUND RELAY",8,1
     let postFakeoutClicks = 0;
     let logoutChoiceOpen = false;
     let logoutResetTimer = 0;
+
+    function buildLogoutThreats() {
+        const quotes = logoutHostileQuotes.slice();
+
+        for (let index = quotes.length - 1; index > 0; index -= 1) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            const quote = quotes[index];
+            quotes[index] = quotes[swapIndex];
+            quotes[swapIndex] = quote;
+        }
+
+        return [
+            'STOP IT',
+            'I WILL INSTALL A VIRUS',
+            ...quotes.slice(0, 3),
+            'YOU ARE RELENTLESS',
+            'YOU DON\'T WANT THIS'
+        ];
+    }
 
     function resetLogoutSequence() {
         window.clearTimeout(logoutResetTimer);
@@ -160,8 +189,10 @@ OPEN "OUTBOUND RELAY",8,1
         logoutFakeoutComplete = false;
         postFakeoutClicks = 0;
         logoutChoiceOpen = false;
+        logoutThreats = buildLogoutThreats();
         logoutResponse.classList.remove('is-logging-out', 'is-joking', 'is-refreshing');
         logoutResponseText.textContent = '';
+        if (logoutResponseDevil) logoutResponseDevil.hidden = true;
         logoutResponse.hidden = true;
         logoutConfirmOverlay.hidden = true;
     }
@@ -231,7 +262,8 @@ OPEN "OUTBOUND RELAY",8,1
             logoutChoiceOpen = false;
             logoutResponse.classList.remove('is-joking');
             logoutResponse.classList.add('is-logging-out');
-            logoutResponseText.textContent = 'GOOD HUMAN. \u{1F608}';
+            logoutResponseText.textContent = 'GOOD HUMAN. I PUT FOOD IN YOUR BOWL.';
+            if (logoutResponseDevil) logoutResponseDevil.hidden = false;
             logoutResponse.classList.remove('is-refreshing');
             void logoutResponse.offsetWidth;
             logoutResponse.classList.add('is-refreshing');
