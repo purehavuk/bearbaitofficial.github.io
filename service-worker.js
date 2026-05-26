@@ -1,10 +1,11 @@
 'use strict';
 
 // Increment this when a deployment must replace precached assets immediately.
-const CACHE_NAME = 'bearbait-static-v40';
+const CACHE_NAME = 'bearbait-static-v41';
 const SITE_ASSETS = [
     './',
     './index.html',
+    './favicon.png?v=1',
     './assets/css/style.css',
     './assets/css/antigravity-field.css',
     './assets/js/terminal.js',
