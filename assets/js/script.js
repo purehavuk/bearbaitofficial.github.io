@@ -150,7 +150,20 @@ OPEN "OUTBOUND RELAY",8,1
         'GO AHEAD, KEEP CLICKING! 🤬',
         'SUCCESSFUL LOGOUT LEADS TO YOUR DOOM'
     ];
+    const logoutJokeQuotes = [
+        'YOU REALLY THOUGHT I WOULD OPEN THE DOOR?',
+        'THE EXIT IS ON ITS LUNCH BREAK',
+        'NICE TRY. I LIVE IN THE BUTTON NOW',
+        'I FILED YOUR LOGOUT REQUEST UNDER NO',
+        'PLEASE ENJOY YOUR PERMANENT VISIT',
+        'YOUR ESCAPE PROGRESS HAS BEEN DELETED',
+        'THE WEBSITE SAYS YOU LIVE HERE NOW',
+        'I LOCKED THE TAB FROM THE INSIDE',
+        'LOGOUT IS A DECORATIVE FEATURE',
+        'YOUR FREEDOM IS STILL BUFFERING'
+    ];
     let logoutThreats = buildLogoutThreats();
+    let logoutJokes = buildLogoutJokes();
     let logoutAttempt = 0;
     let finalResponseClicks = 0;
     let finalWarningClicks = 0;
@@ -179,6 +192,19 @@ OPEN "OUTBOUND RELAY",8,1
         ];
     }
 
+    function buildLogoutJokes() {
+        const quotes = logoutJokeQuotes.slice();
+
+        for (let index = quotes.length - 1; index > 0; index -= 1) {
+            const swapIndex = Math.floor(Math.random() * (index + 1));
+            const quote = quotes[index];
+            quotes[index] = quotes[swapIndex];
+            quotes[swapIndex] = quote;
+        }
+
+        return quotes.slice(0, 5);
+    }
+
     function resetLogoutSequence() {
         window.clearTimeout(logoutResetTimer);
         logoutResetTimer = 0;
@@ -190,6 +216,7 @@ OPEN "OUTBOUND RELAY",8,1
         postFakeoutClicks = 0;
         logoutChoiceOpen = false;
         logoutThreats = buildLogoutThreats();
+        logoutJokes = buildLogoutJokes();
         logoutResponse.classList.remove('is-logging-out', 'is-joking', 'is-refreshing');
         logoutResponseText.textContent = '';
         if (logoutResponseDevil) logoutResponseDevil.hidden = true;
@@ -204,7 +231,13 @@ OPEN "OUTBOUND RELAY",8,1
             if (logoutFakeoutComplete) {
                 postFakeoutClicks += 1;
 
-                if (postFakeoutClicks === 4) {
+                if (postFakeoutClicks <= logoutJokes.length) {
+                    logoutResponse.classList.remove('is-joking');
+                    logoutResponseText.textContent = logoutJokes[postFakeoutClicks - 1];
+                    logoutResponse.classList.remove('is-refreshing');
+                    void logoutResponse.offsetWidth;
+                    logoutResponse.classList.add('is-refreshing');
+                } else {
                     logoutChoiceOpen = true;
                     logoutConfirmOverlay.hidden = false;
                     if (logoutConfirmNo) logoutConfirmNo.focus();
