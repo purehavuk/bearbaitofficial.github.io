@@ -1581,6 +1581,31 @@ button:hover>span {
     color: #55ff99 !important;
 }
 
+.logout-response.is-joking {
+    color: var(--amber-bright);
+    border-color: rgba(255, 190, 0, 0.92);
+    background:
+        var(--crt-rgb),
+        var(--crt-scanlines),
+        linear-gradient(to bottom, rgba(255, 190, 0, 0.16), rgba(12, 5, 1, 0.95));
+    background-size: var(--crt-rgb-size), var(--crt-scanline-size), 100% 100%;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 230, 153, 0.22),
+        inset 0 0 24px rgba(255, 169, 0, 0.13),
+        0 0 8px rgba(255, 190, 0, 0.72),
+        0 0 28px rgba(255, 169, 0, 0.32);
+    text-shadow: var(--crt-phosphor-persist) !important;
+}
+
+.logout-response.is-joking::before {
+    border-color: rgba(255, 190, 0, 0.22);
+    box-shadow: inset 0 0 9px rgba(255, 169, 0, 0.1);
+}
+
+.logout-response.is-joking .logout-response-prefix {
+    color: var(--amber) !important;
+}
+
 .logout-confirm-overlay {
     position: fixed;
     inset: 0;

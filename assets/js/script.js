@@ -160,7 +160,7 @@ OPEN "OUTBOUND RELAY",8,1
         logoutFakeoutComplete = false;
         postFakeoutClicks = 0;
         logoutChoiceOpen = false;
-        logoutResponse.classList.remove('is-logging-out', 'is-refreshing');
+        logoutResponse.classList.remove('is-logging-out', 'is-joking', 'is-refreshing');
         logoutResponseText.textContent = '';
         logoutResponse.hidden = true;
         logoutConfirmOverlay.hidden = true;
@@ -201,6 +201,7 @@ OPEN "OUTBOUND RELAY",8,1
 
                             window.setTimeout(function () {
                                 logoutResponse.classList.remove('is-logging-out');
+                                logoutResponse.classList.add('is-joking');
                                 logoutResponseText.textContent = 'JUST KIDDING';
                                 logoutResponse.classList.remove('is-refreshing');
                                 void logoutResponse.offsetWidth;
@@ -228,6 +229,8 @@ OPEN "OUTBOUND RELAY",8,1
         logoutConfirmNo.addEventListener('click', function () {
             logoutConfirmOverlay.hidden = true;
             logoutChoiceOpen = false;
+            logoutResponse.classList.remove('is-joking');
+            logoutResponse.classList.add('is-logging-out');
             logoutResponseText.textContent = 'GOOD HUMAN. \u{1F608}';
             logoutResponse.classList.remove('is-refreshing');
             void logoutResponse.offsetWidth;
