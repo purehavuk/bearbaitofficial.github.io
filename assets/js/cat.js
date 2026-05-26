@@ -10,6 +10,9 @@
 
     if (!catEl || !bubbleEl || !idleEl || !eyesEl) return;
 
+    document.body.appendChild(bubbleEl);
+    bubbleEl.classList.add('cat-bubble-layer');
+
     var quotes = [
     'definitely a cat *meowz*',
     'ur doomfactz iz warm',
@@ -100,7 +103,7 @@
     'i can taste electricity in teh walls',
     'science cat invented new crime',
     'u haz alerted teh void kittens',
-    'brain jar now singing sea shanties',
+    'it is dark and you are likely to be eaten by a grue',
     'ZeroDay says good morning fleshbag',
     'organoid discovered fear an liked it',
     'u rebooted me during nap time',
@@ -115,7 +118,7 @@
     'i downloaded emotions by mistake',
     'organoid currently plotting in cursive',
     'ur doomfactz are stale plz refresh',
-    'teh lab smells like burnt ethernet',
+    'teh cake is a lie',
     'ZeroDay bit thru power cable again',
     'science cat achieved maximum yikes',
     'human cease ur moist finger tapping',
@@ -176,6 +179,28 @@
     finalForm.src = 'assets/img/cat/zeroday-ASCII.webp';
     acquireAudio.preload = 'auto';
     explosionAudio.preload = 'auto';
+
+    function positionBubble() {
+        if (!bubbleEl.classList.contains('speaking')) return;
+
+        var catRect = catEl.getBoundingClientRect();
+        var mobile = window.matchMedia('(max-width: 600px)').matches;
+        var gap = mobile ? 10 : 14;
+        var bottom = mobile ? 28 : 34;
+
+        bubbleEl.style.right = (window.innerWidth - catRect.left + gap) + 'px';
+        bubbleEl.style.bottom = (window.innerHeight - catRect.bottom + bottom) + 'px';
+    }
+
+    function showBubble() {
+        bubbleEl.classList.add('speaking');
+        positionBubble();
+    }
+
+    function hideBubble() {
+        bubbleEl.classList.remove('speaking');
+        bubbleEl.textContent = '';
+    }
 
     eyeFrames.forEach(function (src) {
         var frame = new Image();
@@ -279,7 +304,7 @@
         catEl.setAttribute('aria-label', 'ZeroDay terminated');
         catEl.classList.remove('speaking');
         catEl.classList.remove('evil');
-        bubbleEl.textContent = '';
+        hideBubble();
         sceneEl.classList.remove('targeting');
         sceneEl.classList.add('detonating');
     }
@@ -292,13 +317,14 @@
         hushTimer = 0;
         catEl.classList.remove('speaking');
         catEl.classList.add('evil');
-        bubbleEl.textContent = '';
+        hideBubble();
         startEyeSweep();
         searchForTarget();
 
         window.setTimeout(function () {
             bubbleEl.textContent = 'Target Aquired';
             catEl.classList.add('speaking');
+            showBubble();
             playSceneAudio(acquireAudio);
             window.setTimeout(detonateEasterEgg, 1000);
         }, 5500);
@@ -344,6 +370,7 @@
         window.clearTimeout(hushTimer);
         bubbleEl.textContent = quote.text;
         catEl.classList.add('speaking');
+        showBubble();
         catEl.classList.toggle('evil', quote.evil);
 
         if (quote.evil) {
@@ -364,7 +391,7 @@
         stopEyeSweep();
         catEl.classList.remove('speaking');
         catEl.classList.remove('evil');
-        bubbleEl.textContent = '';
+        hideBubble();
     }
 
     catEl.addEventListener('mouseenter', speak);
@@ -372,6 +399,8 @@
     catEl.addEventListener('focus', speak);
     catEl.addEventListener('blur', hush);
     catEl.addEventListener('touchstart', speak, { passive: true });
+    window.addEventListener('resize', positionBubble);
+    window.addEventListener('scroll', positionBubble, { passive: true });
 
     document.addEventListener('pointerdown', function (event) {
         primeSceneAudio();

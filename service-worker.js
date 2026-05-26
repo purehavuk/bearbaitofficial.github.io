@@ -1,7 +1,7 @@
 'use strict';
 
 // Increment this when a deployment must replace precached assets immediately.
-const CACHE_NAME = 'bearbait-static-v14';
+const CACHE_NAME = 'bearbait-static-v39';
 const SITE_ASSETS = [
     './',
     './index.html',
@@ -10,6 +10,7 @@ const SITE_ASSETS = [
     './assets/js/terminal.js',
     './assets/js/antigravity-field.js',
     './assets/js/cat.js',
+    './assets/js/noise.js',
     './assets/js/script.js',
     './assets/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.woff2',
     './assets/fonts/IBM_Plex_Mono/IBMPlexMono-Medium.woff2',
@@ -20,7 +21,8 @@ const SITE_ASSETS = [
     './assets/img/background/prevail-framework.webp',
     './assets/img/logos/bearbait-official.png',
     './assets/img/crt/bearbait-CRT-reflection.png',
-    './assets/img/crt/bearbait-CRT-handprint.png',
+    './assets/img/crt/bearbait-CRT-handprint.webp',
+    './assets/img/crt/bearbait-CRT-handprint-mobile.webp',
     './assets/img/author/gt-author-full.png',
     './assets/img/book/intended-user-3d-cover.png',
     './assets/img/book/intended-user-secrect-cover.png',

@@ -118,25 +118,45 @@ OPEN "OUTBOUND RELAY",8,1
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll(); // run once on load
 
-    const discordCard = document.querySelector('.discord-card[data-discord-widget-url]');
+    const discordCard = document.querySelector('.discord-card[data-discord-count-url]');
     if (discordCard) {
         const presence = discordCard.querySelector('.discord-presence');
         const presenceCount = discordCard.querySelector('.discord-presence-count');
-        const widgetUrl = discordCard.dataset.discordWidgetUrl;
+        const countUrl = discordCard.dataset.discordCountUrl;
+        let pulsesSynchronized = false;
 
-        function updateDiscordPresence() {
-            fetch(widgetUrl, { headers: { Accept: 'application/json' } })
+        function synchronizeSocialPulses() {
+            if (pulsesSynchronized || !document.getAnimations) return;
+
+            const pulseNames = new Set([
+                'socialTextPulse',
+                'socialLogoPulse',
+                'discordStatusTextPulse'
+            ]);
+
+            document.getAnimations().forEach(animation => {
+                if (pulseNames.has(animation.animationName)) {
+                    animation.currentTime = 0;
+                }
+            });
+
+            pulsesSynchronized = true;
+        }
+
+        function updateDiscordMemberCount() {
+            fetch(countUrl, { headers: { Accept: 'application/json' } })
                 .then(response => {
-                    if (!response.ok) throw new Error('Discord widget request failed');
+                    if (!response.ok) throw new Error('Discord invite count request failed');
                     return response.json();
                 })
-                .then(widget => {
-                    const count = Number(widget.presence_count);
+                .then(invite => {
+                    const count = Number(invite.approximate_member_count);
                     if (!Number.isFinite(count) || !presence || !presenceCount) return;
 
-                    presenceCount.textContent = `${count.toLocaleString()} ONLINE`;
+                    presenceCount.textContent = `${count.toLocaleString()} MEMBERS`;
                     presence.hidden = false;
-                    discordCard.setAttribute('aria-label', `Discord, ${count.toLocaleString()} members online`);
+                    discordCard.setAttribute('aria-label', `Discord, approximately ${count.toLocaleString()} members`);
+                    window.requestAnimationFrame(synchronizeSocialPulses);
                 })
                 .catch(() => {
                     if (presence) presence.hidden = true;
@@ -144,8 +164,8 @@ OPEN "OUTBOUND RELAY",8,1
                 });
         }
 
-        updateDiscordPresence();
-        window.setInterval(updateDiscordPresence, 5 * 60 * 1000);
+        updateDiscordMemberCount();
+        window.setInterval(updateDiscordMemberCount, 5 * 60 * 1000);
     }
 
 })();

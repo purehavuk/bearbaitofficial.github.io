@@ -13,7 +13,10 @@
         fetchpriority="high">
     <link rel="preload" href="assets/img/logos/bearbait-official.png" as="image" fetchpriority="high">
     <link rel="preload" href="assets/img/crt/bearbait-CRT-reflection.png" as="image">
-    <link rel="preload" href="assets/img/crt/bearbait-CRT-handprint.png" as="image">
+    <link rel="preload" href="assets/img/crt/bearbait-CRT-handprint.webp" as="image" type="image/webp"
+        media="(min-width: 789px)">
+    <link rel="preload" href="assets/img/crt/bearbait-CRT-handprint-mobile.webp" as="image" type="image/webp"
+        media="(max-width: 788px)">
     <link rel="preload" href="assets/img/background/prevail-framework.webp" as="image" type="image/webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
@@ -49,8 +52,14 @@
     </video>
     <div class="bg-overlay"></div>
     <div class="crt-glass-overlay" aria-hidden="true">
+        <div class="composite-dropouts"></div>
+        <div class="vhs-tracking"></div>
         <img class="crt-reflection" src="assets/img/crt/bearbait-CRT-reflection.png" alt="" width="883" height="357">
-        <img class="crt-handprint" src="assets/img/crt/bearbait-CRT-handprint.png" alt="" width="788" height="690">
+        <picture>
+            <source media="(max-width: 788px)" srcset="assets/img/crt/bearbait-CRT-handprint-mobile.webp">
+            <img class="crt-handprint" src="assets/img/crt/bearbait-CRT-handprint.webp" alt="" width="1169"
+                height="1024">
+        </picture>
     </div>
     <div class="zeroday-easter-egg" id="zeroday-easter-egg" aria-hidden="true">
         <img class="zeroday-termination" src="assets/img/cat/zeroday-termination.png" alt="" decoding="async">
@@ -89,6 +98,9 @@
                         <i class="fa-solid fa-envelope nav-icon" aria-hidden="true"></i>
                         <span>Contact</span>
                     </a>
+                    <button class="nav-link nav-logout" type="button">
+                        <span>System Logout</span>
+                    </button>
                 </nav>
 
             </div>
@@ -128,6 +140,7 @@
 
                 <div class="section-body about-grid">
                     <div class="stat-panel stats-col" aria-label="BearBait Official profile highlights">
+                        <p class="social-label"><span>Highlights</span></p>
                         <div class="stat-row">
                             <span class="stat-value">475k+</span>
                             <span class="stat-label">TikTok followers</span>
@@ -143,8 +156,8 @@
                     </div>
 
                     <div class="text-col">
-                        <p class="section-kicker">GT (Gabriel Torch). Molecular biologist. University educator. Internet
-                            omen delivery system.<br><br>Possibly three raccoons in a trench coat operating a PC at
+                        <p class="section-kicker">GT (Gabriel Torch).<br><br>Molecular biologist.<br>University educator.<br>Internet
+                            omen delivery system.<br><br>...Possibly three raccoons in a trench coat operating a PC at
                             knife-point!</p>
                         <p>As the creator behind BearBait Official, I'm turning serious science into daily dispatches
                             from the edge of the possible: Artificial intelligence, brain organoids, strange biology,
@@ -168,7 +181,7 @@
 
                 <div class="section-body social-grid">
                     <div class="social-group group-left">
-                        <p class="social-label">Videos</p>
+                        <p class="social-label"><span>Videos</span></p>
                         <div class="social-links">
                             <a class="social-card" href="https://www.tiktok.com/@bearbaitofficial" target="_blank"
                                 rel="noopener" aria-label="TikTok">
@@ -204,11 +217,11 @@
                     </div>
 
                     <div class="social-group group-right">
-                        <p class="social-label">Community</p>
+                        <p class="social-label"><span>Community</span></p>
                         <div class="social-links">
                             <a class="social-card discord-card" href="https://discord.gg/cVcEChDMdD" target="_blank"
                                 rel="noopener" aria-label="Discord"
-                                data-discord-widget-url="https://discord.com/api/guilds/1449537403588050966/widget.json">
+                                data-discord-count-url="https://discord.com/api/v10/invites/cVcEChDMdD?with_counts=true">
                                 <span class="icon-wrap">
                                     <img class="social-icon icon-default" src="assets/img/social/discord-white.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
@@ -218,7 +231,6 @@
                                 <span class="social-name discord-name">
                                     <span class="discord-title">Discord</span>
                                     <span class="discord-presence" aria-hidden="true" hidden>
-                                        <span class="discord-presence-dot"></span>
                                         <span class="discord-presence-count"></span>
                                     </span>
                                 </span>
@@ -325,6 +337,7 @@
 
     <script src="assets/js/antigravity-field.js"></script>
     <script src="assets/js/cat.js"></script>
+    <script src="assets/js/noise.js"></script>
     <script src="assets/js/script.js"></script>
 
 </body>
