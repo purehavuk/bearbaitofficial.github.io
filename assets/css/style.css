@@ -1586,7 +1586,10 @@ button:hover>span {
 
 .zeroday-easter-egg.detonating .zeroday-termination {
     opacity: 1;
-    animation: zerodayTerminationFade 1.25s ease-in 5s forwards;
+    transform-origin: center;
+    animation:
+        zerodayTerminationImpact 2s steps(1, end) 40ms both,
+        zerodayTerminationFade 1.25s ease-in 5s forwards;
 }
 
 .zeroday-easter-egg.detonating .zeroday-flash {
@@ -1607,6 +1610,88 @@ button:hover>span {
     100% {
         background: #f8e531;
         opacity: 0;
+    }
+}
+
+@keyframes zerodayTerminationImpact {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    4% {
+        transform: translate(-3vw, 2vh) scale(1.2);
+    }
+
+    9% {
+        transform: translate(2.7vw, -2.2vh) scale(1.19);
+    }
+
+    14% {
+        transform: translate(-2.6vw, -1.7vh) scale(1.18);
+    }
+
+    19% {
+        transform: translate(2.5vw, 1.8vh) scale(1.18);
+    }
+
+    24% {
+        transform: translate(-2.25vw, 1.2vh) scale(1.17);
+    }
+
+    29% {
+        transform: translate(2.1vw, -1.35vh) scale(1.165);
+    }
+
+    34% {
+        transform: translate(-1.85vw, -1vh) scale(1.155);
+    }
+
+    39% {
+        transform: translate(1.75vw, 1.05vh) scale(1.15);
+    }
+
+    44% {
+        transform: translate(-1.55vw, 0.72vh) scale(1.145);
+    }
+
+    49% {
+        transform: translate(1.4vw, -0.82vh) scale(1.14);
+    }
+
+    54% {
+        transform: translate(-1.22vw, -0.6vh) scale(1.13);
+    }
+
+    59% {
+        transform: translate(1.05vw, 0.62vh) scale(1.125);
+    }
+
+    64% {
+        transform: translate(-0.88vw, 0.45vh) scale(1.115);
+    }
+
+    69% {
+        transform: translate(0.7vw, -0.4vh) scale(1.105);
+    }
+
+    74% {
+        transform: translate(-0.54vw, -0.27vh) scale(1.095);
+    }
+
+    79% {
+        transform: translate(0.42vw, 0.22vh) scale(1.09);
+    }
+
+    84% {
+        transform: translate(-0.3vw, 0.16vh) scale(1.085);
+    }
+
+    90% {
+        transform: translate(0.16vw, -0.1vh) scale(1.08);
+    }
+
+    100% {
+        transform: translate(0, 0) scale(1.075);
     }
 }
 
