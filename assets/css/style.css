@@ -330,8 +330,9 @@ body {
     right: 0;
     z-index: 1;
     display: block;
-    width: 883px;
-    height: 357px;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
     max-width: none;
 }
 
@@ -939,6 +940,7 @@ button:hover>span {
 .stats-col .stat-value {
     font-family: 'Pono 088', 'IBM Plex Mono', monospace;
     font-size: 36px;
+    line-height: 1.1;
 }
 
 /* Card & Panel Bases */
@@ -1710,16 +1712,48 @@ button:hover>span {
 
 /* === FOOTER & CAT === */
 .footer {
+    --footer-rail-inset: max(clamp(16px, 3vw, 32px), calc((100vw - var(--content-max-width)) / 2));
     position: relative;
     display: flex;
     align-items: center;
     justify-content: flex-end;
     min-height: 208px;
-    padding: 32px clamp(32px, 6vw, 72px) 44px;
+    padding: 32px var(--footer-rail-inset) 44px;
     background-color: rgba(0, 0, 0, 0.50);
     border-top: 1px solid rgba(255, 184, 54, 0.18);
     box-shadow: inset 0 32px 32px rgba(0, 0, 0, 0.24);
-    isolation: isolate;
+}
+
+.site-design-by {
+    position: absolute;
+    left: var(--footer-rail-inset);
+    bottom: 32px;
+    z-index: 2147483647;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--amber);
+    line-height: 1.35;
+    text-align: center;
+    opacity: 0.72;
+}
+
+.site-design-by span {
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.ph-logo {
+    display: block;
+    width: auto;
+    height: 48px;
+    object-fit: contain;
+    image-rendering: crisp-edges;
+    animation: socialLogoPulse 1.9s ease-in-out infinite;
 }
 
 .footer::before,
@@ -1739,13 +1773,14 @@ button:hover>span {
 }
 
 .cat {
-    position: relative;
+    position: absolute;
+    right: var(--footer-rail-inset);
+    bottom: 32px;
     z-index: 1;
     image-rendering: crisp-edges;
     image-rendering: pixelated;
     width: 128px;
     height: 128px;
-    margin-left: auto;
     cursor: help;
     contain: layout;
 }
@@ -1820,7 +1855,7 @@ button:hover>span {
 .cat-bubble {
     position: absolute;
     right: calc(100% + 14px);
-    bottom: 34px;
+    bottom: 52px;
     z-index: 2;
     --cat-bubble-crt-filter: brightness(0) saturate(100%) invert(97%) sepia(11%) saturate(650%) hue-rotate(330deg) brightness(106%) contrast(104%) ;
     display: flex;
@@ -2602,12 +2637,24 @@ button:hover>span {
 
     .footer {
         min-height: 210px;
-        padding: 34px 20px 52px;
+        padding: 34px var(--footer-rail-inset) 52px;
+    }
+
+    .site-design-by {
+        bottom: 24px;
+        gap: 8px;
+        font-size: 9px;
+    }
+
+    .ph-logo {
+        height: 32px;
     }
 
     .cat {
         width: 80px;
         height: 80px;
+        right: var(--footer-rail-inset);
+        bottom: 24px;
         margin-right: 0;
     }
 
@@ -2632,7 +2679,7 @@ button:hover>span {
 
     .cat-bubble {
         right: calc(100% + 10px);
-        bottom: 28px;
+        bottom: 42px;
         min-width: 220px;
         max-width: calc(100vw - 132px);
         padding: 0 10px 24px;

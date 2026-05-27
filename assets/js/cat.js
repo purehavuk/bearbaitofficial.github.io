@@ -186,7 +186,7 @@
         var catRect = catEl.getBoundingClientRect();
         var mobile = window.matchMedia('(max-width: 600px)').matches;
         var gap = mobile ? 10 : 14;
-        var bottom = mobile ? 28 : 34;
+        var bottom = mobile ? 42 : 52;
 
         bubbleEl.style.right = (window.innerWidth - catRect.left + gap) + 'px';
         bubbleEl.style.bottom = (window.innerHeight - catRect.bottom + bottom) + 'px';
