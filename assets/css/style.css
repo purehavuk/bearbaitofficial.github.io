@@ -334,6 +334,7 @@ body {
     height: 100%;
     background-size: cover;
     max-width: none;
+    opacity: 0.5;
 }
 
 .crt-handprint {
