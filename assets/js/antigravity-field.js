@@ -60,14 +60,14 @@
                 speedMultiplier: getVar('speed', speedMultiplier),
                 
                 glowRadius: 2500,
-                glowColor1: 'rgba(36, 2, 2, 0.35)',
-                glowColor2: 'rgba(18, 1, 1, 0)',
-                glowColor3: 'rgba(1, 0, 0, 0)',
+                glowColor1: 'rgba(255, 140, 140, 0.5)',
+                glowColor2: 'rgba(96, 13, 13, 0.25)',
+                glowColor3: 'rgba(64, 6, 6, 0.05)',
                 influenceRadius: 4250,
                 idleRangeX: 30,
                 idleRangeY: 60,
                 angleShift: 1.1,
-                noiseOpacity: 0,
+                noiseOpacity: 0.1,
             };
             config.pointerSmoothing = 0.04 * config.speedMultiplier;
         }
