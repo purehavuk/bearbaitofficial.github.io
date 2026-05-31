@@ -962,6 +962,10 @@ button:hover>span {
     gap: 0;
 }
 
+.mobile-stats-col {
+    display: none;
+}
+
 .stat-row {
     display: grid;
     gap: 8px;
@@ -1768,11 +1772,9 @@ button:hover>span {
 .ph-logo {
     display: block;
     width: auto;
-    height: 48px;
+    height: 42px;
     object-fit: contain;
-    image-rendering: crisp-edges;
-    opacity: 0.72;
-    animation: socialLogoPulse 1.9s ease-in-out infinite;
+    animation: socialLogoPulse 8s ease-in-out infinite;
 }
 
 .footer::before,
@@ -2442,6 +2444,18 @@ button:hover>span {
         max-width: none;
     }
 
+    #about>.section-body>.stats-col {
+        display: none;
+    }
+
+    #about .mobile-stats-col {
+        display: grid;
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+        margin: 20px 0 22px;
+    }
+
     .section-media {
         opacity: 0.5;
     }
@@ -2518,6 +2532,11 @@ button:hover>span {
         margin-inline: auto;
     }
 
+    #social .social-group {
+        width: min(72vw, 320px);
+        max-width: min(72vw, 320px);
+    }
+
     .tag-list span {
         font-size: 20px;
     }
@@ -2530,6 +2549,30 @@ button:hover>span {
     #social .social-grid {
         grid-template-columns: 1fr;
         gap: 16px;
+    }
+
+    #social .social-links {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #social .social-card {
+        width: 100%;
+        flex: 0 0 auto;
+        min-height: 132px;
+        padding: 14px 10px 12px;
+        gap: 10px;
+    }
+
+    #social .icon-wrap {
+        width: 86px;
+        height: 86px;
+    }
+
+    #social .social-icon {
+        width: 78px;
+        height: 78px;
+        flex-basis: 78px;
     }
 
     .hero-bg {
@@ -2601,17 +2644,20 @@ button:hover>span {
     }
 
     #social .social-links {
+        flex-direction: column;
         justify-content: center;
+        align-items: stretch;
         gap: 12px;
         padding: 16px;
     }
 
     #social .social-card {
+        width: 100%;
         min-width: 0;
-        min-height: 112px;
-        flex: 1;
-        padding: 8px 4px 6px;
-        gap: 8px;
+        min-height: 132px;
+        flex: 0 0 auto;
+        padding: 14px 10px 12px;
+        gap: 10px;
     }
 
     #social .social-label {
@@ -2621,14 +2667,14 @@ button:hover>span {
     }
 
     #social .icon-wrap {
-        width: 64px;
-        height: 64px;
+        width: 86px;
+        height: 86px;
     }
 
     #social .social-icon {
-        width: 56px;
-        height: 56px;
-        flex-basis: 56px;
+        width: 78px;
+        height: 78px;
+        flex-basis: 78px;
     }
 
     #social .social-name {

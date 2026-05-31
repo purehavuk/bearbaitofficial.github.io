@@ -77,8 +77,12 @@ OPEN "OUTBOUND RELAY",8,1
         'REALIGNING RACCOON WHISKER ANTENNAS'
     ];
 
-    // Desktop & Mobile Click-Delay Glitch & Link Hold (1.5 seconds)
-    const relayLinks = document.querySelectorAll('.social-card, a.btn-primary[href^="mailto:"]');
+    const relayNavDelay = 1500;
+    const mobileSocialGlitchLead = 850;
+    const mobileSocialQuery = window.matchMedia('(max-width: 768px)');
+
+    // Desktop & Mobile Click-Delay Glitch & Link Hold
+    const relayLinks = document.querySelectorAll('.social-card, a.btn-primary[href^="mailto:"], .cover-credit a[href]');
     relayLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             if (link.classList.contains('glitching')) {
@@ -99,9 +103,15 @@ OPEN "OUTBOUND RELAY",8,1
                 void relayScreen.offsetWidth;
                 relayScreen.classList.add('signal-burst');
             }
-            overlay.classList.add('active');
 
             const href = link.getAttribute('href');
+            const glitchLead = link.classList.contains('social-card') && mobileSocialQuery.matches
+                ? mobileSocialGlitchLead
+                : 0;
+
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, glitchLead);
 
             setTimeout(() => {
                 window.location.href = href;
@@ -111,7 +121,7 @@ OPEN "OUTBOUND RELAY",8,1
                     overlay.classList.remove('active');
                     if (relayScreen) relayScreen.classList.remove('signal-burst');
                 }, 1000);
-            }, 1500);
+            }, glitchLead + relayNavDelay);
         });
     });
 
