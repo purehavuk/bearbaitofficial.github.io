@@ -21,7 +21,7 @@
     <link rel="preload" href="assets/img/background/prevail-framework.webp" as="image" type="image/webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/antigravity-field.css">
+    <link rel="stylesheet" href="assets/css/outforblood.css">
     <script>
         if ('serviceWorker' in navigator && window.isSecureContext) {
             (function () {
@@ -64,10 +64,10 @@
     </div>
     <script src="assets/js/terminal.js"></script>
 
-    <video class="bg-video" autoplay muted loop playsinline preload="auto">
+    <video class="site-background-video" autoplay muted loop playsinline preload="auto">
         <source src="assets/video/bloodflow.webm" type="video/webm">
     </video>
-    <div class="bg-overlay"></div>
+    <div class="site-background-overlay"></div>
     <div class="crt-glass-overlay" aria-hidden="true">
         <div class="composite-dropouts"></div>
         <div class="vhs-tracking"></div>
@@ -79,43 +79,43 @@
         </picture>
     </div>
     <div class="zeroday-easter-egg" id="zeroday-easter-egg" aria-hidden="true">
-        <img class="zeroday-termination" src="assets/img/cat/zeroday-termination.png" alt="" decoding="async">
-        <img class="zeroday-reticle" src="assets/img/cat/zeroday-reticle.webp" alt="" width="128" height="128"
+        <img class="zeroday-termination" src="assets/img/zeroday/zeroday-termination.png" alt="" decoding="async">
+        <img class="zeroday-reticle" src="assets/img/zeroday/zeroday-reticle.webp" alt="" width="128" height="128"
             decoding="async">
         <div class="zeroday-flash"></div>
     </div>
 
-    <div class="layout">
+    <div class="site-layout">
 
-        <aside class="navbar">
-            <div class="nav-inner">
+        <aside class="site-navigation">
+            <div class="site-navigation-inner">
 
-                <div class="nav-label">MENU</div>
-                <nav class="nav-group">
-                    <a class="nav-link active" href="#welcome">
-                        <i class="fa-solid fa-house nav-icon" aria-hidden="true"></i>
+                <div class="site-navigation-label">MENU</div>
+                <nav class="site-navigation-group">
+                    <a class="site-navigation-link active" href="#welcome">
+                        <i class="fa-solid fa-house site-navigation-icon" aria-hidden="true"></i>
                     </a>
                 </nav>
 
-                <div class="nav-label">PAGES</div>
-                <nav class="nav-group">
-                    <a class="nav-link" href="#about">
-                        <i class="fa-solid fa-user nav-icon" aria-hidden="true"></i>
+                <div class="site-navigation-label">PAGES</div>
+                <nav class="site-navigation-group">
+                    <a class="site-navigation-link" href="#about">
+                        <i class="fa-solid fa-user site-navigation-icon" aria-hidden="true"></i>
                         <span>About Me</span>
                     </a>
-                    <a class="nav-link" href="#social">
-                        <i class="fa-solid fa-share-nodes nav-icon" aria-hidden="true"></i>
+                    <a class="site-navigation-link" href="#social">
+                        <i class="fa-solid fa-share-nodes site-navigation-icon" aria-hidden="true"></i>
                         <span>Social Media</span>
                     </a>
-                    <a class="nav-link" href="#book">
-                        <i class="fa-solid fa-book nav-icon" aria-hidden="true"></i>
+                    <a class="site-navigation-link" href="#book">
+                        <i class="fa-solid fa-book site-navigation-icon" aria-hidden="true"></i>
                         <span>Book</span>
                     </a>
-                    <a class="nav-link" href="#contact">
-                        <i class="fa-solid fa-envelope nav-icon" aria-hidden="true"></i>
+                    <a class="site-navigation-link" href="#contact">
+                        <i class="fa-solid fa-envelope site-navigation-icon" aria-hidden="true"></i>
                         <span>Contact</span>
                     </a>
-                    <button class="nav-link nav-logout" type="button">
+                    <button class="site-navigation-link site-navigation-logout" type="button">
                         <span>Logout</span>
                     </button>
                 </nav>
@@ -131,8 +131,8 @@
             <div class="logout-confirm" role="dialog" aria-modal="true" aria-labelledby="logout-confirm-prompt">
                 <p class="logout-confirm-prompt" id="logout-confirm-prompt">ARE YOU SURE?:</p>
                 <div class="logout-confirm-actions">
-                    <button class="btn-primary logout-confirm-yes" type="button">YES</button>
-                    <button class="btn-primary logout-confirm-no" type="button">NO</button>
+                    <button class="button-primary logout-confirm-yes" type="button">YES</button>
+                    <button class="button-primary logout-confirm-no" type="button">NO</button>
                 </div>
             </div>
         </div>
@@ -147,46 +147,44 @@
                     <source src="assets/video/bearbait-creepy-exit.webm" type="video/webm">
                 </video>
                 <div class="logout-exit-controls">
-                    <button class="btn-primary logout-return" type="button">RETURN TO SYSTEM</button>
+                    <button class="button-primary logout-return" type="button">RETURN TO SYSTEM</button>
                 </div>
             </div>
         </div>
 
-        <main class="main-content">
+        <main class="site-main">
 
-            <!-- WELCOME -->
-            <section id="welcome" class="page-section">
-                <div class="hero-wrap">
+            <section id="welcome" class="site-section">
+                <div class="hero">
 
-                    <img class="hero-bg" src="assets/img/background/bearbait-banner.webp" alt="" width="1707" height="720"
+                    <img class="hero-background" src="assets/img/background/bearbait-banner.webp" alt="" width="1707" height="720"
                         aria-hidden="true">
 
-                    <div class="hero-col">
-                        <img class="hero-logo" src="assets/img/logos/bearbait-official.png" alt="BearBait Official"
+                    <div class="hero-brand">
+                        <img class="hero-brand-logo" src="assets/img/logos/bearbait-official.png" alt="BearBait Official"
                             width="960" height="1080" fetchpriority="high">
-                        <span class="hero-scanlines" aria-hidden="true"></span>
+                        <span class="hero-brand-scanlines" aria-hidden="true"></span>
                     </div>
 
                 </div>
             </section>
 
-            <!-- ABOUT -->
-            <section id="about" class="page-section">
-                <div class="section-titlebar">
-                    <div class="titlebar-inner">
-                        <h2 class="titlebar-title">About Me</h2>
-                        <div class="titlebar-hover"></div>
+            <section id="about" class="site-section">
+                <div class="section-header">
+                    <div class="section-header-inner">
+                        <h2 class="section-header-title">About Me</h2>
+                        <div class="section-header-status"></div>
                     </div>
                 </div>
 
                 <div class="section-media" aria-hidden="true">
-                    <img class="author-img" src="assets/img/author/gt-author-full.png" alt="" width="1214" height="640"
+                    <img class="about-author-image" src="assets/img/author/gt-author-full.png" alt="" width="1214" height="640"
                         loading="lazy" decoding="async">
                 </div>
 
                 <div class="section-body about-grid">
-                    <div class="stat-panel stats-col" aria-label="BearBait Official profile highlights">
-                        <p class="social-label"><span>Highlights</span></p>
+                    <div class="stat-panel stats-column" aria-label="BearBait Official profile highlights">
+                        <p class="panel-label"><span>Highlights</span></p>
                         <div class="stat-row">
                             <span class="stat-value">475k+</span>
                             <span class="stat-label">TikTok followers</span>
@@ -201,12 +199,12 @@
                         </div>
                     </div>
 
-                    <div class="text-col">
+                    <div class="text-column">
                         <p class="section-kicker">GT (Gabriel Torch).<br><br>Molecular biologist.<br>University educator.<br>Internet
                             omen delivery system.<br><br>...Possibly three raccoons in a trench coat operating a PC at
                             knife-point!</p>
-                        <div class="stat-panel stats-col mobile-stats-col" aria-label="BearBait Official profile highlights">
-                            <p class="social-label"><span>Highlights</span></p>
+                        <div class="stat-panel stats-column mobile-stats-column" aria-label="BearBait Official profile highlights">
+                            <p class="panel-label"><span>Highlights</span></p>
                             <div class="stat-row">
                                 <span class="stat-value">475k+</span>
                                 <span class="stat-label">TikTok followers</span>
@@ -231,45 +229,44 @@
                 </div>
             </section>
 
-            <!-- SOCIAL -->
-            <section id="social" class="page-section" aria-label="Social Media">
-                <div class="section-titlebar">
-                    <div class="titlebar-inner">
-                        <h2 class="titlebar-title">Socials</h2>
-                        <div class="titlebar-hover"></div>
+            <section id="social" class="site-section" aria-label="Social Media">
+                <div class="section-header">
+                    <div class="section-header-inner">
+                        <h2 class="section-header-title">Socials</h2>
+                        <div class="section-header-status"></div>
                     </div>
                 </div>
 
                 <div class="section-body social-grid">
-                    <div class="social-group group-left">
-                        <p class="social-label"><span>Videos</span></p>
+                    <div class="social-group social-group-videos">
+                        <p class="panel-label"><span>Videos</span></p>
                         <div class="social-links">
                             <a class="social-card" href="https://www.tiktok.com/@bearbaitofficial" target="_blank"
                                 rel="noopener" aria-label="TikTok">
-                                <span class="icon-wrap">
-                                    <img class="social-icon icon-default" src="assets/img/social/tiktok-white.png"
+                                <span class="social-icon-stack">
+                                    <img class="social-icon social-icon-default" src="assets/img/social/tiktok-white.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
-                                    <img class="social-icon icon-hover" src="assets/img/social/tiktok-color.png" alt=""
+                                    <img class="social-icon social-icon-hover" src="assets/img/social/tiktok-color.png" alt=""
                                         aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
                                 </span>
                                 <span class="social-name">TikTok</span>
                             </a>
                             <a class="social-card" href="https://www.youtube.com/@bearbaitofficial" target="_blank"
                                 rel="noopener" aria-label="YouTube">
-                                <span class="icon-wrap">
-                                    <img class="social-icon icon-default" src="assets/img/social/youtube-white.png"
+                                <span class="social-icon-stack">
+                                    <img class="social-icon social-icon-default" src="assets/img/social/youtube-white.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
-                                    <img class="social-icon icon-hover" src="assets/img/social/youtube-color.png" alt=""
+                                    <img class="social-icon social-icon-hover" src="assets/img/social/youtube-color.png" alt=""
                                         aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
                                 </span>
                                 <span class="social-name">YouTube</span>
                             </a>
                             <a class="social-card" href="https://www.facebook.com/profile.php?id=61589672181924"
                                 target="_blank" rel="noopener" aria-label="Facebook">
-                                <span class="icon-wrap">
-                                    <img class="social-icon icon-default" src="assets/img/social/facebook-white.png"
+                                <span class="social-icon-stack">
+                                    <img class="social-icon social-icon-default" src="assets/img/social/facebook-white.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
-                                    <img class="social-icon icon-hover" src="assets/img/social/facebook-color.png"
+                                    <img class="social-icon social-icon-hover" src="assets/img/social/facebook-color.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
                                 </span>
                                 <span class="social-name">Facebook</span>
@@ -277,16 +274,16 @@
                         </div>
                     </div>
 
-                    <div class="social-group group-right">
-                        <p class="social-label"><span>Community</span></p>
+                    <div class="social-group social-group-community">
+                        <p class="panel-label"><span>Community</span></p>
                         <div class="social-links">
                             <a class="social-card discord-card" href="https://discord.gg/cVcEChDMdD" target="_blank"
                                 rel="noopener" aria-label="Discord"
                                 data-discord-count-url="https://discord.com/api/v10/invites/cVcEChDMdD?with_counts=true">
-                                <span class="icon-wrap">
-                                    <img class="social-icon icon-default" src="assets/img/social/discord-white.png"
+                                <span class="social-icon-stack">
+                                    <img class="social-icon social-icon-default" src="assets/img/social/discord-white.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
-                                    <img class="social-icon icon-hover" src="assets/img/social/discord-color.png"
+                                    <img class="social-icon social-icon-hover" src="assets/img/social/discord-color.png"
                                         alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
                                 </span>
                                 <span class="social-name discord-name">
@@ -301,25 +298,24 @@
                 </div>
             </section>
 
-            <!-- BOOK -->
-            <section id="book" class="page-section">
-                <div class="section-titlebar">
-                    <div class="titlebar-inner">
-                        <h2 class="titlebar-title">Book</h2>
-                        <div class="titlebar-hover"></div>
+            <section id="book" class="site-section">
+                <div class="section-header">
+                    <div class="section-header-inner">
+                        <h2 class="section-header-title">Book</h2>
+                        <div class="section-header-status"></div>
                     </div>
                 </div>
 
                 <div class="section-media" aria-hidden="true">
-                    <img class="section-bg" src="assets/img/book/intended-user-3d-cover.png" alt="" width="1214"
+                    <img class="book-background-image" src="assets/img/book/intended-user-3d-cover.png" alt="" width="1214"
                         height="640" loading="lazy" decoding="async">
                 </div>
 
                 <div class="section-body book-grid">
 
-                    <div class="text-col">
+                    <div class="text-column">
                         <p class="section-kicker">A humanoid robot wakes up ten years too late.</p>
-                        <div class="meta-row" aria-label="Book status and genre">
+                        <div class="book-meta" aria-label="Book status and genre">
                             <span>Novel in progress</span>
                             <span>psychological sci-fi / horror</span>
                         </div>
@@ -342,7 +338,7 @@
                         </div>
                     </div>
 
-                    <div class="cover-col" aria-label="Cover for Intendended User">
+                    <div class="book-cover-column" aria-label="Cover for Intendended User">
                         <img src="assets/img/book/intended-user-secrect-cover.png" alt="" aria-hidden="true" width="300"
                             height="450" loading="lazy" decoding="async">
                         <div class="cover-credit">
@@ -354,57 +350,63 @@
                 </div>
             </section>
 
-            <!-- CONTACT -->
-            <section id="contact" class="page-section">
-                <div class="section-titlebar">
-                    <div class="titlebar-inner">
-                        <h2 class="titlebar-title">Contact</h2>
-                        <div class="titlebar-hover"></div>
+            <section id="contact" class="site-section">
+                <div class="section-header">
+                    <div class="section-header-inner">
+                        <h2 class="section-header-title">Contact</h2>
+                        <div class="section-header-status"></div>
                     </div>
                 </div>
 
                 <div class="section-body contact-grid">
-                    <div class="btn-group">
-                        <a class="btn-primary" href="mailto:hello@bearbaitofficial.example">
-                            <i class="fa-solid fa-envelope btn-icon" aria-hidden="true"></i>
-                            <span>Email GT</span>
-                        </a>
+                    <div class="social-group contact-email-group">
+                        <p class="panel-label"><span>Email</span></p>
+                        <div class="social-links">
+                            <a class="social-card email-card" href="mailto:hello@bearbaitofficial.example" aria-label="Email GT">
+                                <span class="social-icon-stack">
+                                    <img class="social-icon social-icon-default" src="assets/img/social/email-white.png"
+                                        alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
+                                    <img class="social-icon social-icon-hover" src="assets/img/social/email-color.png"
+                                        alt="" aria-hidden="true" width="96" height="96" loading="lazy" decoding="async">
+                                </span>
+                                <span class="social-name">Email GT</span>
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="text-col">
+                    <div class="text-column">
                         <p class="section-kicker">Collaborations, interviews, book-related contact, and science-adjacent
                             trouble.
                         </p>
-                        <p>For media requests, speaking, educational work, podcast appearances, brand inquiries, or
-                            book-related contact, use the email button. Serious inquiries get priority; weirdly specific
-                            science questions may become content.</p>
+                        <p>For media requests, speaking, educational work, podcast appearances, brand inquiries, or book-related contact, use the email button.</p>
+                        <p>Serious inquiries get priority; weirdly specific science questions may become content.</p>
                     </div>
                 </div>
             </section>
 
-            <footer class="footer">
-                <div class="cat" id="cat" tabindex="0" role="button" aria-label="A little cat">
-                    <div class="cat-bubble" id="cat-bubble" aria-live="polite"></div>
-                    <img class="cat-img cat-idle" src="assets/img/cat/zeroday.png" alt="" width="128" height="128"
+            <footer class="site-footer">
+                <div class="zeroday" id="zeroday" tabindex="0" role="button" aria-label="ZeroDay">
+                    <div class="zeroday-bubble" id="zeroday-bubble" aria-live="polite"></div>
+                    <img class="zeroday-image zeroday-idle" src="assets/img/zeroday/zeroday.png" alt="" width="128" height="128"
                         loading="lazy" decoding="async">
-                    <span class="cat-talk-pixels" aria-hidden="true"></span>
-                    <img class="cat-img cat-eyes" src="assets/img/cat/zeroday-eyes-01.png" alt="" aria-hidden="true"
+                    <span class="zeroday-talk-pixels" aria-hidden="true"></span>
+                    <img class="zeroday-image zeroday-eyes" src="assets/img/zeroday/zeroday-eyes-01.png" alt="" aria-hidden="true"
                         width="128" height="128">
                 </div>
-                <footer class="site-credits" aria-label="site-credits">
-                    <div class="site-design-by">
+                <div class="site-credits" aria-label="site-credits">
+                    <div class="site-design-credit">
                         <span>Site design by</span>
-                        <img class="ph-logo" src="assets/img/logos/purehavuk.svg" alt="PureHavuk" loading="lazy" decoding="async">
+                        <img class="purehavuk-logo" src="assets/img/logos/purehavuk.svg" alt="PureHavuk" loading="lazy" decoding="async">
                     </div>
                     <p class="site-copyright">&copy; 2026 BEARBAIT Official, GT (Gabriel Torch)</p>
-                </footer>
+                </div>
             </footer>
 
         </main>
     </div>
 
-    <script src="assets/js/antigravity-field.js"></script>
-    <script src="assets/js/cat.js"></script>
+    <script src="assets/js/outforblood.js"></script>
+    <script src="assets/js/zeroday.js"></script>
     <script src="assets/js/noise.js"></script>
     <script src="assets/js/script.js"></script>
 

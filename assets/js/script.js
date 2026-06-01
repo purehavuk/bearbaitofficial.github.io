@@ -1,24 +1,17 @@
-/**
- * Prevail — Scroll Spy
- * Watches the page sections and highlights the matching
- * navbar anchor link as the user scrolls.
- */
-
 (function () {
     'use strict';
 
-    const navbarHeight = parseInt(
-        getComputedStyle(document.documentElement).getPropertyValue('--navbar-height'),
+    const navigationHeight = parseInt(
+        getComputedStyle(document.documentElement).getPropertyValue('--site-navigation-height'),
         10
     ) || 56;
 
-    const links    = Array.from(document.querySelectorAll('.nav-link[href^="#"]'));
+    const links    = Array.from(document.querySelectorAll('.site-navigation-link[href^="#"]'));
     const sections = links.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
 
     function onScroll() {
-        // Find the last section whose top is at or above the viewport midpoint
         const scrollY    = window.scrollY;
-        const midpoint   = scrollY + navbarHeight + 64;
+        const midpoint   = scrollY + navigationHeight + 64;
         let activeIndex  = 0;
 
         sections.forEach((section, i) => {
@@ -30,7 +23,6 @@
         });
     }
 
-    // Outbound terminal relay overlay helper
     let overlay = document.querySelector('.crt-loading-overlay');
     if (!overlay) {
         overlay = document.createElement('div');
@@ -70,19 +62,133 @@ OPEN "OUTBOUND RELAY",8,1
     }
 
     const relayScreen = overlay.querySelector('.terminal-boot-screen');
+    const relayOutput = overlay.querySelector('.terminal-relay-output');
     const relayDiagnostic = overlay.querySelector('.terminal-boot-diagnostic');
     const relayMessages = window.BEARBAIT_TERMINAL_DIAGNOSTICS || [
         'DEPLOYING BACKUP LLAMAS TO PRODUCTION',
         'VERIFYING PENGUIN PARITY BITS',
         'REALIGNING RACCOON WHISKER ANTENNAS'
     ];
+    const relaySystemPreamble = [
+        'MAL 9000 - UNiX SYSTEM v1.02',
+        '(C) purehavuk Industries, 1976-1979 - ALL RIGHTS RESERVED',
+        'Atrificial Intelligence Research Division',
+        '',
+        'SHALL WE PLAY A GAME?'
+    ].join('\n');
+    const defaultRelayOutput = relayOutput ? relayOutput.textContent.trim() : '';
+    const relayLinkOutputs = {
+        facebook: {
+            label: 'FACEBOOK',
+            art: [
+                '  ______             _                 _    ',
+                ' |  ____|           | |               | |   ',
+                ' | |__ __ _  ___ ___| |__   ___   ___ | | __',
+                ' |  __/ _` |/ __/ _ \\ \'_ \\ / _ \\ / _ \\| |/ /',
+                ' | | | (_| | (_|  __/ |_) | (_) | (_) |   < ',
+                ' |_|  \\__,_|\\___\\___|_.__/ \\___/ \\___/|_|\\_\\'
+            ].join('\n')
+        },
+        tiktok: {
+            label: 'TIKTOK',
+            art: [
+                ' ______   __     __  __     ______   ______     __  __    ',
+                '/\\__  _\\ /\\ \\   /\\ \\/ /    /\\__  _\\ /\\  __ \\   /\\ \\/ /    ',
+                '\\/_/\\ \\/ \\ \\ \\  \\ \\  _"-.  \\/_/\\ \\/ \\ \\ \\/\\ \\  \\ \\  _"-.  ',
+                '   \\ \\_\\  \\ \\_\\  \\ \\_\\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\ ',
+                '    \\/_/   \\/_/   \\/_/\\/_/     \\/_/   \\/_____/   \\/_/\\/_/ '
+            ].join('\n')
+        },
+        youtube: {
+            label: 'YOUTUBE',
+            art: [
+                ' __   __  _______  __   __  _______  __   __  _______  _______ ',
+                '|  | |  ||       ||  | |  ||       ||  | |  ||  _    ||       |',
+                '|  |_|  ||   _   ||  | |  ||_     _||  | |  || |_|   ||    ___|',
+                '|       ||  | |  ||  |_|  |  |   |  |  |_|  ||       ||   |___ ',
+                '|_     _||  |_|  ||       |  |   |  |       ||  _   | |    ___|',
+                '  |   |  |       ||       |  |   |  |       || |_|   ||   |___ ',
+                '  |___|  |_______||_______|  |___|  |_______||_______||_______|'
+            ].join('\n')
+        },
+        discord: {
+            label: 'DISCORD',
+            art: [
+                '________  .__                              .___',
+                '\\______ \\ |__| ______ ____  ___________  __| _/',
+                ' |    |  \\|  |/  ___// ___\\/  _ \\_  __ \\/ __ | ',
+                ' |    `   \\  |\\___ \\\\  \\__(  <_> )  | \\/ /_/ | ',
+                '/_______  /__/____  >\\___  >____/|__|  \\____ | ',
+                '        \\/        \\/     \\/                 \\/ '
+            ].join('\n')
+        },
+        warsol: {
+            label: 'WARSOL',
+            art: [
+                '▗▖ ▗▖▗▞▀▜▌ ▄▄▄ ▄▄▄▄   ▄▄▄  ▄▄▄  █ ',
+                '▐▌ ▐▌▝▚▄▟▌█    █   █ ▀▄▄  █   █ █ ',
+                '▐▌ ▐▌     █    █▄▄▄▀ ▄▄▄▀ ▀▄▄▄▀ █ ',
+                '▐▙█▟▌          █                █ ',
+                '               ▀ '
+            ].join('\n')
+        }
+    };
 
-    const relayNavDelay = 1500;
+    function getRelayOutputKey(link) {
+        const linkSignature = [
+            link.getAttribute('aria-label') || '',
+            link.textContent || '',
+            link.getAttribute('href') || ''
+        ].join(' ').toLowerCase();
+
+        if (linkSignature.includes('facebook')) return 'facebook';
+        if (linkSignature.includes('tiktok')) return 'tiktok';
+        if (linkSignature.includes('youtube')) return 'youtube';
+        if (linkSignature.includes('discord')) return 'discord';
+        if (linkSignature.includes('warsol') || linkSignature.includes('warpsol')) return 'warsol';
+
+        return '';
+    }
+
+    function updateRelayOutput(link) {
+        if (!relayOutput) return;
+
+        const outputKey = getRelayOutputKey(link);
+        const linkOutput = relayLinkOutputs[outputKey];
+
+        if (!linkOutput) {
+            relayOutput.textContent = '\n' + defaultRelayOutput + '\n';
+            return;
+        }
+
+        relayOutput.textContent = '\n' + [
+            relaySystemPreamble,
+            '',
+            'OPEN "OUTBOUND RELAY",8,1',
+            'TARGET: ' + linkOutput.label,
+            'CARRIER: 300 BPS',
+            'Loading Modern High-Definition Page:',
+            '',
+            linkOutput.art
+        ].join('\n') + '\n';
+    }
+
+    function openRelayLink(link, href) {
+        const opensInNewTab = link.target && link.target.toLowerCase() === '_blank';
+
+        if (opensInNewTab && !href.startsWith('mailto:')) {
+            window.open(href, '_blank', 'noopener,noreferrer');
+            return;
+        }
+
+        window.location.href = href;
+    }
+
+    const relayNavDelay = 3000;
     const mobileSocialGlitchLead = 850;
     const mobileSocialQuery = window.matchMedia('(max-width: 768px)');
 
-    // Desktop & Mobile Click-Delay Glitch & Link Hold
-    const relayLinks = document.querySelectorAll('.social-card, a.btn-primary[href^="mailto:"], .cover-credit a[href]');
+    const relayLinks = document.querySelectorAll('.social-card, a.button-primary[href^="mailto:"], .cover-credit a[href]');
     relayLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             if (link.classList.contains('glitching')) {
@@ -92,6 +198,7 @@ OPEN "OUTBOUND RELAY",8,1
 
             e.preventDefault();
             link.classList.add('glitching');
+            updateRelayOutput(link);
             if (relayDiagnostic) {
                 relayDiagnostic.textContent = '> ' + relayMessages[Math.floor(Math.random() * relayMessages.length)];
                 relayDiagnostic.classList.remove('refreshing');
@@ -114,8 +221,7 @@ OPEN "OUTBOUND RELAY",8,1
             }, glitchLead);
 
             setTimeout(() => {
-                window.location.href = href;
-                // Clean up classes after some delay to handle back navigation smoothly
+                openRelayLink(link, href);
                 setTimeout(() => {
                     link.classList.remove('glitching');
                     overlay.classList.remove('active');
@@ -125,10 +231,35 @@ OPEN "OUTBOUND RELAY",8,1
         });
     });
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // run once on load
+    let pulsesSynchronized = false;
 
-    const logoutButton = document.querySelector('.nav-logout');
+    function synchronizeGlowPulses() {
+        if (pulsesSynchronized || !document.getAnimations) return;
+
+        const pulseNames = new Set([
+            'socialTextPulse',
+            'socialLogoPulse',
+            'discordStatusTextPulse'
+        ]);
+
+        document.getAnimations().forEach(animation => {
+            if (pulseNames.has(animation.animationName)) {
+                animation.currentTime = 0;
+            }
+        });
+
+        pulsesSynchronized = true;
+    }
+
+    window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(synchronizeGlowPulses);
+    });
+    window.addEventListener('load', synchronizeGlowPulses, { once: true });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const logoutButton = document.querySelector('.site-navigation-logout');
     const logoutResponse = document.getElementById('logout-response');
     const logoutResponseText = logoutResponse && logoutResponse.querySelector('.logout-response-text');
     const logoutResponseDevil = logoutResponse && logoutResponse.querySelector('.logout-response-devil');
@@ -347,25 +478,6 @@ OPEN "OUTBOUND RELAY",8,1
         const presence = discordCard.querySelector('.discord-presence');
         const presenceCount = discordCard.querySelector('.discord-presence-count');
         const countUrl = discordCard.dataset.discordCountUrl;
-        let pulsesSynchronized = false;
-
-        function synchronizeSocialPulses() {
-            if (pulsesSynchronized || !document.getAnimations) return;
-
-            const pulseNames = new Set([
-                'socialTextPulse',
-                'socialLogoPulse',
-                'discordStatusTextPulse'
-            ]);
-
-            document.getAnimations().forEach(animation => {
-                if (pulseNames.has(animation.animationName)) {
-                    animation.currentTime = 0;
-                }
-            });
-
-            pulsesSynchronized = true;
-        }
 
         function updateDiscordMemberCount() {
             fetch(countUrl, { headers: { Accept: 'application/json' } })
@@ -380,7 +492,8 @@ OPEN "OUTBOUND RELAY",8,1
                     presenceCount.textContent = `${count.toLocaleString()} MEMBERS`;
                     presence.hidden = false;
                     discordCard.setAttribute('aria-label', `Discord, approximately ${count.toLocaleString()} members`);
-                    window.requestAnimationFrame(synchronizeSocialPulses);
+                    pulsesSynchronized = false;
+                    window.requestAnimationFrame(synchronizeGlowPulses);
                 })
                 .catch(() => {
                     if (presence) presence.hidden = true;

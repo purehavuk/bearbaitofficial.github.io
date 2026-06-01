@@ -1,17 +1,17 @@
 (function () {
     'use strict';
 
-    var catEl = document.getElementById('cat');
-    var bubbleEl = document.getElementById('cat-bubble');
-    var idleEl = catEl && catEl.querySelector('.cat-idle');
-    var eyesEl = catEl && catEl.querySelector('.cat-eyes');
+    var zerodayEl = document.getElementById('zeroday');
+    var bubbleEl = document.getElementById('zeroday-bubble');
+    var idleEl = zerodayEl && zerodayEl.querySelector('.zeroday-idle');
+    var eyesEl = zerodayEl && zerodayEl.querySelector('.zeroday-eyes');
     var sceneEl = document.getElementById('zeroday-easter-egg');
     var reticleEl = sceneEl && sceneEl.querySelector('.zeroday-reticle');
 
-    if (!catEl || !bubbleEl || !idleEl || !eyesEl) return;
+    if (!zerodayEl || !bubbleEl || !idleEl || !eyesEl) return;
 
     document.body.appendChild(bubbleEl);
-    bubbleEl.classList.add('cat-bubble-layer');
+    bubbleEl.classList.add('zeroday-bubble-layer');
 
     var quotes = [
     'definitely a cat *meowz*',
@@ -171,25 +171,25 @@
     var sceneAudioPrimed = false;
     var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var eyeFrames = Array.from({ length: 9 }, function (_, index) {
-        return 'assets/img/cat/zeroday-eyes-0' + (index + 1) + '.png';
+        return 'assets/img/zeroday/zeroday-eyes-0' + (index + 1) + '.png';
     });
     var finalForm = new Image();
     var acquireAudio = new Audio('assets/audio/target-acquired.mp3');
     var explosionAudio = new Audio('assets/audio/explosion.mp3');
-    finalForm.src = 'assets/img/cat/zeroday-ASCII.webp';
+    finalForm.src = 'assets/img/zeroday/zeroday-ASCII.webp';
     acquireAudio.preload = 'auto';
     explosionAudio.preload = 'auto';
 
     function positionBubble() {
         if (!bubbleEl.classList.contains('speaking')) return;
 
-        var catRect = catEl.getBoundingClientRect();
+        var zerodayRect = zerodayEl.getBoundingClientRect();
         var mobile = window.matchMedia('(max-width: 600px)').matches;
         var gap = mobile ? 10 : 14;
         var bottom = mobile ? 42 : 52;
 
-        bubbleEl.style.right = (window.innerWidth - catRect.left + gap) + 'px';
-        bubbleEl.style.bottom = (window.innerHeight - catRect.bottom + bottom) + 'px';
+        bubbleEl.style.right = (window.innerWidth - zerodayRect.left + gap) + 'px';
+        bubbleEl.style.bottom = (window.innerHeight - zerodayRect.bottom + bottom) + 'px';
     }
 
     function showBubble() {
@@ -216,7 +216,7 @@
     }
 
     function sweepEyes() {
-        if (!catEl.classList.contains('evil')) return;
+        if (!zerodayEl.classList.contains('evil')) return;
 
         eyesEl.src = eyeFrames[eyeFrame];
 
@@ -298,12 +298,12 @@
         stopEyeSweep();
         playSceneAudio(explosionAudio);
         idleEl.src = finalForm.src;
-        catEl.classList.add('terminated');
-        catEl.removeAttribute('tabindex');
-        catEl.removeAttribute('role');
-        catEl.setAttribute('aria-label', 'ZeroDay terminated');
-        catEl.classList.remove('speaking');
-        catEl.classList.remove('evil');
+        zerodayEl.classList.add('terminated');
+        zerodayEl.removeAttribute('tabindex');
+        zerodayEl.removeAttribute('role');
+        zerodayEl.setAttribute('aria-label', 'ZeroDay terminated');
+        zerodayEl.classList.remove('speaking');
+        zerodayEl.classList.remove('evil');
         hideBubble();
         sceneEl.classList.remove('targeting');
         sceneEl.classList.add('detonating');
@@ -315,15 +315,15 @@
         easterEggActive = true;
         window.clearTimeout(hushTimer);
         hushTimer = 0;
-        catEl.classList.remove('speaking');
-        catEl.classList.add('evil');
+        zerodayEl.classList.remove('speaking');
+        zerodayEl.classList.add('evil');
         hideBubble();
         startEyeSweep();
         searchForTarget();
 
         window.setTimeout(function () {
             bubbleEl.textContent = 'Target Aquired';
-            catEl.classList.add('speaking');
+            zerodayEl.classList.add('speaking');
             showBubble();
             playSceneAudio(acquireAudio);
             window.setTimeout(detonateEasterEgg, 1000);
@@ -358,7 +358,7 @@
             return;
         }
 
-        if (catEl.classList.contains('evil')) return;
+        if (zerodayEl.classList.contains('evil')) return;
 
         var quote = chooseQuote();
 
@@ -369,9 +369,9 @@
 
         window.clearTimeout(hushTimer);
         bubbleEl.textContent = quote.text;
-        catEl.classList.add('speaking');
+        zerodayEl.classList.add('speaking');
         showBubble();
-        catEl.classList.toggle('evil', quote.evil);
+        zerodayEl.classList.toggle('evil', quote.evil);
 
         if (quote.evil) {
             startEyeSweep();
@@ -384,30 +384,30 @@
     function hush(force) {
         if (easterEggActive) return;
 
-        if (catEl.classList.contains('evil') && force !== true) return;
+        if (zerodayEl.classList.contains('evil') && force !== true) return;
 
         window.clearTimeout(hushTimer);
         hushTimer = 0;
         stopEyeSweep();
-        catEl.classList.remove('speaking');
-        catEl.classList.remove('evil');
+        zerodayEl.classList.remove('speaking');
+        zerodayEl.classList.remove('evil');
         hideBubble();
     }
 
-    catEl.addEventListener('mouseenter', speak);
-    catEl.addEventListener('mouseleave', hush);
-    catEl.addEventListener('focus', speak);
-    catEl.addEventListener('blur', hush);
-    catEl.addEventListener('touchstart', speak, { passive: true });
+    zerodayEl.addEventListener('mouseenter', speak);
+    zerodayEl.addEventListener('mouseleave', hush);
+    zerodayEl.addEventListener('focus', speak);
+    zerodayEl.addEventListener('blur', hush);
+    zerodayEl.addEventListener('touchstart', speak, { passive: true });
     window.addEventListener('resize', positionBubble);
     window.addEventListener('scroll', positionBubble, { passive: true });
 
     document.addEventListener('pointerdown', function (event) {
         primeSceneAudio();
         if (easterEggActive) return;
-        if (!catEl.classList.contains('evil')) return;
+        if (!zerodayEl.classList.contains('evil')) return;
 
-        suppressNextSpeak = catEl.contains(event.target);
+        suppressNextSpeak = zerodayEl.contains(event.target);
         hush(true);
     }, { passive: true });
 }());

@@ -2,7 +2,14 @@
     'use strict';
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (document.querySelector('.antigravity-field')) return;
+    if (document.querySelector('.outforblood-field')) return;
+
+    const TWO_PI = Math.PI * 2;
+    const BUCKET_COUNT = 15;
+    const MAX_DPR = 2;
+    const TARGET_DESKTOP_WIDTH = 1920;
+    const TARGET_MOBILE_WIDTH = 480;
+    const MIN_PARTICLE_SCALE = 335 / 5000;
 
     function createLayer(options) {
         const {
@@ -33,8 +40,7 @@
         };
         const particles = [];
         let width = 0, height = 0, dpr = 1, raf = 0, lastTime = 0;
-        let noisePattern = null, smoothedPush = 0;
-
+        let smoothedPush = 0;
         let config = {};
 
         function updateConfig() {
@@ -58,44 +64,28 @@
                 alphaBase: getVar('alpha', alphaBase),
                 alphaVariance: getVar('alpha-var', alphaVariance),
                 speedMultiplier: getVar('speed', speedMultiplier),
-                
-                glowRadius: 2500,
-                glowColor1: 'rgba(255, 140, 140, 0.5)',
-                glowColor2: 'rgba(96, 13, 13, 0.25)',
-                glowColor3: 'rgba(64, 6, 6, 0.05)',
                 influenceRadius: 4250,
                 idleRangeX: 30,
                 idleRangeY: 60,
                 angleShift: 1.1,
-                noiseOpacity: 0.1,
             };
             config.pointerSmoothing = 0.04 * config.speedMultiplier;
         }
 
-        function createNoise() {
-            const nCanvas = document.createElement('canvas');
-            nCanvas.width = 128;
-            nCanvas.height = 128;
-            const nCtx = nCanvas.getContext('2d');
-            const idata = nCtx.createImageData(128, 128);
-            const data = idata.data;
-            for (let i = 0; i < data.length; i += 4) {
-                const v = Math.random() * 255;
-                data[i] = data[i + 1] = data[i + 2] = v;
-                data[i + 3] = 0;
-            }
-            nCtx.putImageData(idata, 0, 0);
-            noisePattern = ctx.createPattern(nCanvas, 'repeat');
-        }
+        const buckets = Array.from({ length: BUCKET_COUNT }, () => []);
 
-        const TWO_PI = Math.PI * 2;
-        const bucketCount = 15;
-        const buckets = Array.from({ length: bucketCount }, () => []);
+        function getParticleScale() {
+            if (width >= TARGET_DESKTOP_WIDTH) return 1;
+            if (width <= TARGET_MOBILE_WIDTH) return MIN_PARTICLE_SCALE;
+
+            const ratio = (width - TARGET_MOBILE_WIDTH) / (TARGET_DESKTOP_WIDTH - TARGET_MOBILE_WIDTH);
+            return MIN_PARTICLE_SCALE + ratio * (1 - MIN_PARTICLE_SCALE);
+        }
 
         function resize() {
             updateConfig();
 
-            dpr = Math.min(window.devicePixelRatio || 1, 2);
+            dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
             width = window.innerWidth;
             height = window.innerHeight;
             canvas.width = Math.floor(width * dpr);
@@ -104,22 +94,7 @@
             canvas.style.height = `${height}px`;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            // Calculate responsive scale factor for particle counts
-            let countScale = 1;
-            const targetDesktopWidth = 1920;
-            const targetMobileWidth = 480;
-            const targetMinScale = 335 / 5000; // For a 5000 base total, scales down to ~335.
-            
-            if (width < targetDesktopWidth) {
-                if (width <= targetMobileWidth) {
-                    countScale = targetMinScale;
-                } else {
-                    const ratio = (width - targetMobileWidth) / (targetDesktopWidth - targetMobileWidth);
-                    countScale = targetMinScale + ratio * (1 - targetMinScale);
-                }
-            }
-
-            const responsiveCount = Math.max(1, Math.floor(config.particleCount * countScale));
+            const responsiveCount = Math.max(1, Math.floor(config.particleCount * getParticleScale()));
 
             particles.length = 0;
             for (let i = 0; i < responsiveCount; i++) {
@@ -132,7 +107,6 @@
                     len: 1.5 + Math.random() * 5,
                 });
             }
-            createNoise();
         }
 
         function draw(time) {
@@ -152,7 +126,7 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            for (let b = 0; b < bucketCount; b++) {
+            for (let b = 0; b < BUCKET_COUNT; b++) {
                 buckets[b].length = 0;
             }
             const radius = config.influenceRadius;
@@ -168,7 +142,7 @@
                 if (distSq > radiusSq) continue;
                 const dist = Math.sqrt(distSq);
                 const influence = Math.max(0, 1 - dist / radius);
-                const bIdx = Math.floor(influence * (bucketCount - 1));
+                const bIdx = Math.floor(influence * (BUCKET_COUNT - 1));
                 const influenceSq = influence * influence;
                 const angle = Math.atan2(dy, dx) + influence * config.angleShift;
                 const push = influenceSq * smoothedPush;
@@ -182,10 +156,10 @@
             }
 
             ctx.lineCap = 'round';
-            for (let b = 0; b < bucketCount; b++) {
+            for (let b = 0; b < BUCKET_COUNT; b++) {
                 const bucket = buckets[b];
                 if (!bucket.length) continue;
-                const inf = b / (bucketCount - 1);
+                const inf = b / (BUCKET_COUNT - 1);
                 const alpha = config.alphaBase + inf * config.alphaVariance;
                 ctx.lineWidth = 0.4 + inf * 1.2;
                 ctx.strokeStyle = inf > 0.15 ? config.particleColorActive : config.particleColor;
@@ -226,7 +200,6 @@
         }, { passive: true });
         window.addEventListener('pointerleave', centerPointerTarget);
 
-        // Passive touch events keep the field responsive while allowing native page scrolling.
         window.addEventListener('touchstart', trackTouch, { passive: true });
         window.addEventListener('touchmove', trackTouch, { passive: true });
         window.addEventListener('touchend', trackTouch, { passive: true });
@@ -250,10 +223,9 @@
         }
     }
 
-    /* ── Layer 1: base field ─────────────────────────────────── */
     createLayer({
-        className: 'antigravity-field',
-        cssPrefix: '--ag-l1',
+        className: 'outforblood-field',
+        cssPrefix: '--ofb-l1',
         particleCount: 4000,
         particleColor: 'rgba(127, 55, 55, 0.005)',
         particleColorActive: 'rgba(255, 176, 150, 0.1)',
@@ -267,10 +239,9 @@
         speedMultiplier: 1,
     });
 
-    /* ── Layer 2: large, slow, blurred overlay ───────────────── */
     createLayer({
-        className: 'antigravity-field-blur',
-        cssPrefix: '--ag-l2',
+        className: 'outforblood-field-blur',
+        cssPrefix: '--ofb-l2',
         particleCount: 250,
         particleColor: 'rgba(127, 55, 55, 0.25)',
         particleColorActive: 'rgba(255, 125, 125, 0.5)',
@@ -285,8 +256,8 @@
     });
 
     createLayer({
-        className: 'antigravity-field-blur-2',
-        cssPrefix: '--ag-l3',
+        className: 'outforblood-field-glow',
+        cssPrefix: '--ofb-l3',
         particleCount: 750,
         particleColor: 'rgba(127, 55, 55, 0)',
         particleColorActive: 'rgb(167, 130, 130, 0.35)',
