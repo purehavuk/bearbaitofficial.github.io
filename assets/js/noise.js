@@ -11,9 +11,10 @@
     if (!vhsTracking && !compositeDropouts) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const brightFrameInterval = 1000 / 60;
-    const dropoutFrameInterval = 1000 / 60;
-    const compositePatternIntervals = [5, 5, 5, 5, 4].map(frameCount => dropoutFrameInterval * frameCount);
+    const baseFrameInterval = 1000 / 60;
+    const brightFrameInterval = 1000 / 24;
+    const dropoutFrameInterval = 1000 / 18;
+    const compositePatternIntervals = [5, 5, 5, 5, 4].map(frameCount => baseFrameInterval * frameCount);
     const compositePulseInterval = 1000 / 15;
     const compositePulseLevels = [0.18, 0.23, 0.3, 0.38, 0.44, 0.37, 0.29, 0.22];
     const scanlinePitch = 4;
@@ -37,6 +38,10 @@
     let compositePatternStep = 0;
     let lastCompositePulseFrame = -Infinity;
     let compositePulseStep = 0;
+    let resizeFrame = 0;
+    let trackingHeight = 0;
+    let trackingTop = 0;
+    let compositeHeight = 0;
 
     function randomBetween(min, max) {
         return min + Math.random() * (max - min);
@@ -50,8 +55,31 @@
         return snapToScanline(layerTop + value) - layerTop;
     }
 
+    function refreshLayerMetrics() {
+        if (vhsTracking) {
+            trackingHeight = vhsTracking.clientHeight || window.innerHeight * 0.25;
+            trackingTop = vhsTracking.getBoundingClientRect().top;
+        }
+
+        if (compositeDropouts) {
+            compositeHeight = compositeDropouts.clientHeight || window.innerHeight;
+        }
+    }
+
+    function scheduleMetricRefresh() {
+        if (resizeFrame) return;
+
+        resizeFrame = window.requestAnimationFrame(() => {
+            resizeFrame = 0;
+            refreshLayerMetrics();
+        });
+    }
+
     function clearVhsTrackingMotion() {
         window.cancelAnimationFrame(vhsFrame);
+        window.cancelAnimationFrame(resizeFrame);
+        vhsFrame = 0;
+        resizeFrame = 0;
         lastBrightFrame = -Infinity;
         lastDropoutFrame = -Infinity;
         nextCompositePatternFrame = 0;
@@ -69,8 +97,6 @@
     function createVhsBands(hardTrackingHit, darkDropout = false) {
         const lineCount = Math.round(randomBetween(hardTrackingHit ? 110 : 72, hardTrackingHit ? 148 : 104));
         const lines = [];
-        const trackingHeight = vhsTracking.clientHeight || window.innerHeight * 0.25;
-        const trackingTop = vhsTracking.getBoundingClientRect().top;
 
         for (let i = 0; i < lineCount; i += 1) {
             const start = randomBetween(-2, 99);
@@ -129,12 +155,11 @@
         const signalTear = Math.random() < 0.08;
         const lineCount = Math.round(randomBetween(signalTear ? 20 : 12, signalTear ? 30 : 20));
         const lines = [];
-        const screenHeight = compositeDropouts.clientHeight || window.innerHeight;
 
         for (let i = 0; i < lineCount; i += 1) {
             const x = randomBetween(-1, 100);
             const width = Math.round(randomBetween(2, 16));
-            const y = snapToScanline(randomBetween(0, screenHeight));
+            const y = snapToScanline(randomBetween(0, compositeHeight));
             const height = Math.random() < 0.82 ? 1 : signalTear ? 4 : 2;
             const opacity = randomBetween(0.38, signalTear ? 0.74 : 0.6).toFixed(2);
 
@@ -179,12 +204,15 @@
 
     function updateVhsTrackingPreference() {
         clearVhsTrackingMotion();
-        if (!reducedMotion.matches) {
+        refreshLayerMetrics();
+        if (!reducedMotion.matches && !document.hidden) {
             vhsFrame = window.requestAnimationFrame(jumpVhsTracking);
         }
     }
 
     updateVhsTrackingPreference();
+    window.addEventListener('resize', scheduleMetricRefresh, { passive: true });
+    document.addEventListener('visibilitychange', updateVhsTrackingPreference);
     if (typeof reducedMotion.addEventListener === 'function') {
         reducedMotion.addEventListener('change', updateVhsTrackingPreference);
     }

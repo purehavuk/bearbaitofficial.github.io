@@ -7,9 +7,45 @@
     const TWO_PI = Math.PI * 2;
     const BUCKET_COUNT = 15;
     const MAX_DPR = 2;
+    const DEFAULT_TARGET_FPS = 30;
     const TARGET_DESKTOP_WIDTH = 1920;
     const TARGET_MOBILE_WIDTH = 480;
     const MIN_PARTICLE_SCALE = 335 / 5000;
+    const pointerTarget = {
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+    };
+    let pointerHasMoved = false;
+
+    function movePointerTarget(x, y) {
+        pointerTarget.x = x;
+        pointerTarget.y = y;
+        pointerHasMoved = true;
+    }
+
+    function centerPointerTarget() {
+        pointerTarget.x = window.innerWidth / 2;
+        pointerTarget.y = window.innerHeight / 2;
+        pointerHasMoved = false;
+    }
+
+    function trackTouch(e) {
+        const touch = e.touches[0];
+        if (touch) {
+            movePointerTarget(touch.clientX, touch.clientY);
+        } else {
+            centerPointerTarget();
+        }
+    }
+
+    window.addEventListener('pointermove', e => {
+        movePointerTarget(e.clientX, e.clientY);
+    }, { passive: true });
+    window.addEventListener('pointerleave', centerPointerTarget);
+    window.addEventListener('touchstart', trackTouch, { passive: true });
+    window.addEventListener('touchmove', trackTouch, { passive: true });
+    window.addEventListener('touchend', trackTouch, { passive: true });
+    window.addEventListener('touchcancel', trackTouch, { passive: true });
 
     function createLayer(options) {
         const {
@@ -23,6 +59,8 @@
             pushStrength,
             alphaBase, alphaVariance,
             speedMultiplier = 1,
+            maxDpr = MAX_DPR,
+            targetFps = DEFAULT_TARGET_FPS,
         } = options;
 
         const canvas = document.createElement('canvas');
@@ -35,13 +73,14 @@
         const pointer = {
             x: window.innerWidth / 2,
             y: window.innerHeight / 2,
-            tx: window.innerWidth / 2,
-            ty: window.innerHeight / 2,
         };
         const particles = [];
         let width = 0, height = 0, dpr = 1, raf = 0, lastTime = 0;
+        let lastFrame = 0;
+        let resizeFrame = 0;
         let smoothedPush = 0;
         let config = {};
+        const frameInterval = 1000 / Math.max(1, targetFps);
 
         function updateConfig() {
             const rootStyles = getComputedStyle(document.documentElement);
@@ -85,9 +124,13 @@
         function resize() {
             updateConfig();
 
-            dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+            dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
             width = window.innerWidth;
             height = window.innerHeight;
+            if (!pointerHasMoved) {
+                pointer.x = width / 2;
+                pointer.y = height / 2;
+            }
             canvas.width = Math.floor(width * dpr);
             canvas.height = Math.floor(height * dpr);
             canvas.style.width = `${width}px`;
@@ -109,14 +152,29 @@
             }
         }
 
+        function scheduleResize() {
+            if (resizeFrame) return;
+
+            resizeFrame = requestAnimationFrame(() => {
+                resizeFrame = 0;
+                resize();
+            });
+        }
+
         function draw(time) {
+            if (lastFrame && time - lastFrame < frameInterval - 1) {
+                raf = requestAnimationFrame(draw);
+                return;
+            }
+
             const delta = time - (lastTime || time);
             lastTime = time;
+            lastFrame = time;
             const dt = Math.min(delta / 16.667, 4);
             const t = time * 0.0015 * config.speedMultiplier;
 
-            const vx = (pointer.tx - pointer.x) * config.pointerSmoothing;
-            const vy = (pointer.ty - pointer.y) * config.pointerSmoothing;
+            const vx = (pointerTarget.x - pointer.x) * config.pointerSmoothing;
+            const vy = (pointerTarget.y - pointer.y) * config.pointerSmoothing;
             pointer.x += vx * dt;
             pointer.y += vy * dt;
 
@@ -176,99 +234,102 @@
             raf = requestAnimationFrame(draw);
         }
 
-        function movePointerTarget(x, y) {
-            pointer.tx = x;
-            pointer.ty = y;
+        function pause() {
+            cancelAnimationFrame(raf);
+            raf = 0;
         }
 
-        function centerPointerTarget() {
-            pointer.tx = width / 2;
-            pointer.ty = height / 2;
-        }
+        function resume() {
+            if (raf || document.hidden) return;
 
-        function trackTouch(e) {
-            const touch = e.touches[0];
-            if (touch) {
-                movePointerTarget(touch.clientX, touch.clientY);
-            } else {
-                centerPointerTarget();
-            }
-        }
-
-        window.addEventListener('pointermove', e => {
-            movePointerTarget(e.clientX, e.clientY);
-        }, { passive: true });
-        window.addEventListener('pointerleave', centerPointerTarget);
-
-        window.addEventListener('touchstart', trackTouch, { passive: true });
-        window.addEventListener('touchmove', trackTouch, { passive: true });
-        window.addEventListener('touchend', trackTouch, { passive: true });
-        window.addEventListener('touchcancel', trackTouch, { passive: true });
-
-        window.addEventListener('resize', resize);
-        window.addEventListener('beforeunload', () => cancelAnimationFrame(raf));
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                cancelAnimationFrame(raf);
-                raf = 0;
-            } else if (!raf) {
-                lastTime = 0;
-                raf = requestAnimationFrame(draw);
-            }
-        });
-
-        resize();
-        if (!document.hidden) {
+            lastTime = 0;
+            lastFrame = 0;
             raf = requestAnimationFrame(draw);
         }
+
+        function destroy() {
+            pause();
+            cancelAnimationFrame(resizeFrame);
+        }
+
+        resize();
+        resume();
+
+        return {
+            destroy,
+            pause,
+            resume,
+            scheduleResize,
+        };
     }
 
-    createLayer({
-        className: 'outforblood-field',
-        cssPrefix: '--ofb-l1',
-        particleCount: 4000,
-        particleColor: 'rgba(127, 55, 55, 0.005)',
-        particleColorActive: 'rgba(255, 176, 150, 0.1)',
-        driftMin: 0.25,
-        driftMax: 0.75,
-        sizeMin: 0.5,
-        sizeMax: 0.5,
-        pushStrength: 3072,
-        alphaBase: 0.95,
-        alphaVariance: 0.15,
-        speedMultiplier: 1,
+    const layers = [
+        createLayer({
+            className: 'outforblood-field',
+            cssPrefix: '--ofb-l1',
+            particleCount: 4000,
+            particleColor: 'rgba(127, 55, 55, 0.005)',
+            particleColorActive: 'rgba(255, 176, 150, 0.1)',
+            driftMin: 0.25,
+            driftMax: 0.75,
+            sizeMin: 0.5,
+            sizeMax: 0.5,
+            pushStrength: 3072,
+            alphaBase: 0.95,
+            alphaVariance: 0.15,
+            speedMultiplier: 1,
+            maxDpr: 1.5,
+            targetFps: 30,
+        }),
+
+        createLayer({
+            className: 'outforblood-field-blur',
+            cssPrefix: '--ofb-l2',
+            particleCount: 250,
+            particleColor: 'rgba(127, 55, 55, 0.25)',
+            particleColorActive: 'rgba(255, 125, 125, 0.5)',
+            driftMin: 0.75,
+            driftMax: 1.5,
+            sizeMin: 1.5,
+            sizeMax: 5,
+            pushStrength: 2048,
+            alphaBase: 0.5,
+            alphaVariance: 0.5,
+            speedMultiplier: 0.75,
+            maxDpr: 1.25,
+            targetFps: 24,
+        }),
+
+        createLayer({
+            className: 'outforblood-field-glow',
+            cssPrefix: '--ofb-l3',
+            particleCount: 750,
+            particleColor: 'rgba(127, 55, 55, 0)',
+            particleColorActive: 'rgb(167, 130, 130, 0.35)',
+            driftMin: 5.0,
+            driftMax: 10.0,
+            sizeMin: 5,
+            sizeMax: 25,
+            pushStrength: 1024,
+            alphaBase: 0.75,
+            alphaVariance: 0.15,
+            speedMultiplier: .5,
+            maxDpr: 1,
+            targetFps: 24,
+        }),
+    ].filter(Boolean);
+
+    window.addEventListener('resize', () => {
+        layers.forEach(layer => layer.scheduleResize());
+    }, { passive: true });
+
+    window.addEventListener('beforeunload', () => {
+        layers.forEach(layer => layer.destroy());
     });
 
-    createLayer({
-        className: 'outforblood-field-blur',
-        cssPrefix: '--ofb-l2',
-        particleCount: 250,
-        particleColor: 'rgba(127, 55, 55, 0.25)',
-        particleColorActive: 'rgba(255, 125, 125, 0.5)',
-        driftMin: 0.75,
-        driftMax: 1.5,
-        sizeMin: 1.5,
-        sizeMax: 5,
-        pushStrength: 2048,
-        alphaBase: 0.5,
-        alphaVariance: 0.5,
-        speedMultiplier: 0.75,
-    });
-
-    createLayer({
-        className: 'outforblood-field-glow',
-        cssPrefix: '--ofb-l3',
-        particleCount: 750,
-        particleColor: 'rgba(127, 55, 55, 0)',
-        particleColorActive: 'rgb(167, 130, 130, 0.35)',
-        driftMin: 5.0,
-        driftMax: 10.0,
-        sizeMin: 5,
-        sizeMax: 25,
-        pushStrength: 1024,
-        alphaBase: 0.75,
-        alphaVariance: 0.15,
-        speedMultiplier: .5,
+    document.addEventListener('visibilitychange', () => {
+        const action = document.hidden ? 'pause' : 'resume';
+        layers.forEach(layer => layer[action]());
     });
 
 })();

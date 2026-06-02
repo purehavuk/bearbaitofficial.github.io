@@ -198,3 +198,223 @@ SHALL WE PLAY A GAME?`;
 
     window.requestAnimationFrame(render);
 }());
+
+(function () {
+    'use strict';
+
+    function initializeOutboundRelay() {
+        let overlay = document.querySelector('.crt-loading-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'terminal-boot-overlay terminal-relay-overlay crt-loading-overlay';
+            overlay.setAttribute('role', 'status');
+            overlay.setAttribute('aria-label', 'Opening external link');
+            overlay.innerHTML = `
+                <div class="terminal-boot-screen">
+                    <div class="terminal-boot-header">
+                        <span>MAL 9000 - OUTBOUND RELAY</span>
+                        <span>MODE 80 / 300 BAUD</span>
+                    </div>
+                    <pre class="terminal-boot-output terminal-relay-output" aria-hidden="true">
+MAL 9000 OS v1.1
+(C) purehavuk Industries, 1974-1979
+
+OPEN "OUTBOUND RELAY",8,1
+
+   __                 __   _
+  / /  ___  ___ _ ___/ /  (_)  ___   ___ _
+ / /__/ _ \\/ _ \`// _  /  / /  / _ \\ / _ \`/
+/____/\\___/\\_,_/ \\_,_/  /_/  /_//_/ \\_, /
+                                   /___/
+   ___
+  / _ \\ ___ _  ___ _ ___
+ / ___// _ \`/ / _ \`// -_)
+/_/    \\_,_/  \\_, / \\__/
+             /___/
+                    </pre>
+                    <div class="terminal-boot-prompt" aria-hidden="true">
+                        <span class="relay-status">ESTABLISHING SECURE UPLINK... 300 BPS</span><span class="terminal-boot-cursor"></span>
+                    </div>
+                    <div class="terminal-boot-diagnostic"></div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        const relayScreen = overlay.querySelector('.terminal-boot-screen');
+        const relayOutput = overlay.querySelector('.terminal-relay-output');
+        const relayDiagnostic = overlay.querySelector('.terminal-boot-diagnostic');
+        const relayMessages = window.BEARBAIT_TERMINAL_DIAGNOSTICS || [
+            'DEPLOYING BACKUP LLAMAS TO PRODUCTION',
+            'VERIFYING PENGUIN PARITY BITS',
+            'REALIGNING RACCOON WHISKER ANTENNAS'
+        ];
+        const relaySystemPreamble = [
+            'MAL 9000 - UNiX SYSTEM v1.02',
+            '(C) purehavuk Industries, 1976-1979 - ALL RIGHTS RESERVED',
+            'Atrificial Intelligence Research Division',
+            '',
+            'SHALL WE PLAY A GAME?'
+        ].join('\n');
+        const defaultRelayOutput = relayOutput ? relayOutput.textContent.trim() : '';
+        const relayLinkOutputs = {
+            facebook: {
+                label: 'FACEBOOK',
+                art: [
+                    '  ______             _                 _    ',
+                    ' |  ____|           | |               | |   ',
+                    ' | |__ __ _  ___ ___| |__   ___   ___ | | __',
+                    ' |  __/ _` |/ __/ _ \\ \'_ \\ / _ \\ / _ \\| |/ /',
+                    ' | | | (_| | (_|  __/ |_) | (_) | (_) |   < ',
+                    ' |_|  \\__,_|\\___\\___|_.__/ \\___/ \\___/|_|\\_\\'
+                ].join('\n')
+            },
+            tiktok: {
+                label: 'TIKTOK',
+                art: [
+                    ' ______   __     __  __     ______   ______     __  __    ',
+                    '/\\__  _\\ /\\ \\   /\\ \\/ /    /\\__  _\\ /\\  __ \\   /\\ \\/ /    ',
+                    '\\/_/\\ \\/ \\ \\ \\  \\ \\  _"-.  \\/_/\\ \\/ \\ \\ \\/\\ \\  \\ \\  _"-.  ',
+                    '   \\ \\_\\  \\ \\_\\  \\ \\_\\ \\_\\    \\ \\_\\  \\ \\_____\\  \\ \\_\\ \\_\\ ',
+                    '    \\/_/   \\/_/   \\/_/\\/_/     \\/_/   \\/_____/   \\/_/\\/_/ '
+                ].join('\n')
+            },
+            youtube: {
+                label: 'YOUTUBE',
+                art: [
+                    ' __   __  _______  __   __  _______  __   __  _______  _______ ',
+                    '|  | |  ||       ||  | |  ||       ||  | |  ||  _    ||       |',
+                    '|  |_|  ||   _   ||  | |  ||_     _||  | |  || |_|   ||    ___|',
+                    '|       ||  | |  ||  |_|  |  |   |  |  |_|  ||       ||   |___ ',
+                    '|_     _||  |_|  ||       |  |   |  |       ||  _   | |    ___|',
+                    '  |   |  |       ||       |  |   |  |       || |_|   ||   |___ ',
+                    '  |___|  |_______||_______|  |___|  |_______||_______||_______|'
+                ].join('\n')
+            },
+            discord: {
+                label: 'DISCORD',
+                art: [
+                    '________  .__                              .___',
+                    '\\______ \\ |__| ______ ____  ___________  __| _/',
+                    ' |    |  \\|  |/  ___// ___\\/  _ \\_  __ \\/ __ | ',
+                    ' |    `   \\  |\\___ \\\\  \\__(  <_> )  | \\/ /_/ | ',
+                    '/_______  /__/____  >\\___  >____/|__|  \\____ | ',
+                    '        \\/        \\/     \\/                 \\/ '
+                ].join('\n')
+            },
+            warsol: {
+                label: 'WARSOL',
+                art: [
+                    '▗▖ ▗▖▗▞▀▜▌ ▄▄▄ ▄▄▄▄   ▄▄▄  ▄▄▄  █ ',
+                    '▐▌ ▐▌▝▚▄▟▌█    █   █ ▀▄▄  █   █ █ ',
+                    '▐▌ ▐▌     █    █▄▄▄▀ ▄▄▄▀ ▀▄▄▄▀ █ ',
+                    '▐▙█▟▌          █                █ ',
+                    '               ▀ '
+                ].join('\n')
+            }
+        };
+
+        function getRelayOutputKey(link) {
+            const linkSignature = [
+                link.getAttribute('aria-label') || '',
+                link.textContent || '',
+                link.getAttribute('href') || ''
+            ].join(' ').toLowerCase();
+
+            if (linkSignature.includes('facebook')) return 'facebook';
+            if (linkSignature.includes('tiktok')) return 'tiktok';
+            if (linkSignature.includes('youtube')) return 'youtube';
+            if (linkSignature.includes('discord')) return 'discord';
+            if (linkSignature.includes('warsol') || linkSignature.includes('warpsol')) return 'warsol';
+
+            return '';
+        }
+
+        function updateRelayOutput(link) {
+            if (!relayOutput) return;
+
+            const outputKey = getRelayOutputKey(link);
+            const linkOutput = relayLinkOutputs[outputKey];
+
+            if (!linkOutput) {
+                relayOutput.textContent = '\n' + defaultRelayOutput + '\n';
+                return;
+            }
+
+            relayOutput.textContent = '\n' + [
+                relaySystemPreamble,
+                '',
+                'OPEN "OUTBOUND RELAY",8,1',
+                'TARGET: ' + linkOutput.label,
+                'CARRIER: 300 BPS',
+                'Loading Modern High-Definition Page:',
+                '',
+                linkOutput.art
+            ].join('\n') + '\n';
+        }
+
+        function openRelayLink(link, href) {
+            const opensInNewTab = link.target && link.target.toLowerCase() === '_blank';
+
+            if (opensInNewTab && !href.startsWith('mailto:')) {
+                window.open(href, '_blank', 'noopener,noreferrer');
+                return;
+            }
+
+            window.location.href = href;
+        }
+
+        const relayNavDelay = 3000;
+        const mobileSocialGlitchLead = 850;
+        const mobileSocialQuery = window.matchMedia('(max-width: 768px)');
+        const relayLinks = document.querySelectorAll('.social-card, .cover-credit a[href]');
+
+        relayLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                if (link.classList.contains('glitching')) {
+                    e.preventDefault();
+                    return;
+                }
+
+                e.preventDefault();
+                link.classList.add('glitching');
+                updateRelayOutput(link);
+                if (relayDiagnostic) {
+                    relayDiagnostic.textContent = '> ' + relayMessages[Math.floor(Math.random() * relayMessages.length)];
+                    relayDiagnostic.classList.remove('refreshing');
+                    void relayDiagnostic.offsetWidth;
+                    relayDiagnostic.classList.add('refreshing');
+                }
+                if (relayScreen) {
+                    relayScreen.classList.remove('signal-burst');
+                    void relayScreen.offsetWidth;
+                    relayScreen.classList.add('signal-burst');
+                }
+
+                const href = link.getAttribute('href');
+                const glitchLead = link.classList.contains('social-card') && mobileSocialQuery.matches
+                    ? mobileSocialGlitchLead
+                    : 0;
+
+                window.setTimeout(() => {
+                    overlay.classList.add('active');
+                }, glitchLead);
+
+                window.setTimeout(() => {
+                    openRelayLink(link, href);
+                    window.setTimeout(() => {
+                        link.classList.remove('glitching');
+                        overlay.classList.remove('active');
+                        if (relayScreen) relayScreen.classList.remove('signal-burst');
+                    }, 1000);
+                }, glitchLead + relayNavDelay);
+            });
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeOutboundRelay, { once: true });
+    } else {
+        initializeOutboundRelay();
+    }
+}());
