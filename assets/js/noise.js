@@ -1,6 +1,7 @@
 /**
  * Bottom-edge VHS tracking noise overlay.
- * Generates independent bright streaks and dark dropout fragments.
+ * Precomputes random frames, then cycles them quickly to avoid rebuilding
+ * large gradient strings during every paint.
  */
 
 (function () {
@@ -11,37 +12,21 @@
     if (!vhsTracking && !compositeDropouts) return;
 
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const baseFrameInterval = 1000 / 60;
-    const brightFrameInterval = 1000 / 24;
-    const dropoutFrameInterval = 1000 / 18;
-    const compositePatternIntervals = [5, 5, 5, 5, 4].map(frameCount => baseFrameInterval * frameCount);
-    const compositePulseInterval = 1000 / 15;
-    const compositePulseLevels = [0.18, 0.23, 0.3, 0.38, 0.44, 0.37, 0.29, 0.22];
+    const frameInterval = 1000 / 30;
     const scanlinePitch = 4;
-    const vhsProperties = [
-        '--vhs-x',
-        '--vhs-y-scale',
-        '--vhs-bands-x',
-        '--vhs-bands-scale',
-        '--vhs-bands-opacity',
-        '--vhs-bands',
-        '--vhs-dropouts-x',
-        '--vhs-dropouts-scale',
-        '--vhs-dropouts-opacity',
-        '--vhs-dropouts'
-    ];
-    const compositeProperties = ['--composite-x', '--composite-opacity', '--composite-noise'];
-    let vhsFrame;
-    let lastBrightFrame = -Infinity;
-    let lastDropoutFrame = -Infinity;
-    let nextCompositePatternFrame = 0;
-    let compositePatternStep = 0;
-    let lastCompositePulseFrame = -Infinity;
-    let compositePulseStep = 0;
+    const vhsFrameCount = 24;
+    const compositeFrameCount = 18;
+    const vhsProperties = ['--vhs-bands-opacity', '--vhs-bands', '--vhs-dropouts-opacity', '--vhs-dropouts'];
+    const compositeProperties = ['--composite-opacity', '--composite-noise'];
     let resizeFrame = 0;
+    let animationFrame = 0;
+    let lastFrameTime = 0;
     let trackingHeight = 0;
     let trackingTop = 0;
     let compositeHeight = 0;
+    let vhsFrames = [];
+    let compositeFrames = [];
+    let frameIndex = 0;
 
     function randomBetween(min, max) {
         return min + Math.random() * (max - min);
@@ -66,41 +51,13 @@
         }
     }
 
-    function scheduleMetricRefresh() {
-        if (resizeFrame) return;
-
-        resizeFrame = window.requestAnimationFrame(() => {
-            resizeFrame = 0;
-            refreshLayerMetrics();
-        });
-    }
-
-    function clearVhsTrackingMotion() {
-        window.cancelAnimationFrame(vhsFrame);
-        window.cancelAnimationFrame(resizeFrame);
-        vhsFrame = 0;
-        resizeFrame = 0;
-        lastBrightFrame = -Infinity;
-        lastDropoutFrame = -Infinity;
-        nextCompositePatternFrame = 0;
-        compositePatternStep = 0;
-        lastCompositePulseFrame = -Infinity;
-        compositePulseStep = 0;
-        if (vhsTracking) {
-            vhsProperties.forEach(property => vhsTracking.style.removeProperty(property));
-        }
-        if (compositeDropouts) {
-            compositeProperties.forEach(property => compositeDropouts.style.removeProperty(property));
-        }
-    }
-
     function createVhsBands(hardTrackingHit, darkDropout = false) {
-        const lineCount = Math.round(randomBetween(hardTrackingHit ? 110 : 72, hardTrackingHit ? 148 : 104));
+        const lineCount = Math.round(randomBetween(hardTrackingHit ? 58 : 34, hardTrackingHit ? 86 : 52));
         const lines = [];
 
         for (let i = 0; i < lineCount; i += 1) {
             const start = randomBetween(-2, 99);
-            const widerFragment = Math.random() < (hardTrackingHit ? 0.12 : 0.05);
+            const widerFragment = Math.random() < (hardTrackingHit ? 0.14 : 0.07);
             const width = widerFragment
                 ? randomBetween(3.5, hardTrackingHit ? 16 : 10)
                 : randomBetween(0.35, hardTrackingHit ? 6.5 : 4.5);
@@ -122,38 +79,9 @@
         return lines.join(', ');
     }
 
-    function updateBrightTracking() {
-        if (!vhsTracking) return;
-
-        const hardTrackingHit = Math.random() < 0.035;
-        const xRange = hardTrackingHit ? 24 : 10;
-        const bandRange = hardTrackingHit ? 16 : 8;
-
-        vhsTracking.style.setProperty('--vhs-x', `${randomBetween(-xRange, xRange).toFixed(1)}px`);
-        vhsTracking.style.setProperty('--vhs-y-scale', randomBetween(hardTrackingHit ? 0.84 : 0.95, hardTrackingHit ? 1.18 : 1.06).toFixed(3));
-        vhsTracking.style.setProperty('--vhs-bands-x', `${randomBetween(-bandRange, bandRange).toFixed(1)}%`);
-        vhsTracking.style.setProperty('--vhs-bands-scale', randomBetween(0.9, 1.14).toFixed(3));
-        vhsTracking.style.setProperty('--vhs-bands-opacity', randomBetween(0.3, hardTrackingHit ? 0.86 : 0.66).toFixed(2));
-        vhsTracking.style.setProperty('--vhs-bands', createVhsBands(hardTrackingHit));
-    }
-
-    function updateDarkDropouts() {
-        if (!vhsTracking) return;
-
-        const hardTrackingHit = Math.random() < 0.035;
-        const bandRange = hardTrackingHit ? 16 : 8;
-
-        vhsTracking.style.setProperty('--vhs-dropouts-x', `${randomBetween(-bandRange, bandRange).toFixed(1)}%`);
-        vhsTracking.style.setProperty('--vhs-dropouts-scale', randomBetween(0.9, 1.14).toFixed(3));
-        vhsTracking.style.setProperty('--vhs-dropouts-opacity', randomBetween(0.2, hardTrackingHit ? 0.68 : 0.5).toFixed(2));
-        vhsTracking.style.setProperty('--vhs-dropouts', createVhsBands(hardTrackingHit, true));
-    }
-
-    function updateCompositeDropouts() {
-        if (!compositeDropouts) return;
-
-        const signalTear = Math.random() < 0.08;
-        const lineCount = Math.round(randomBetween(signalTear ? 20 : 12, signalTear ? 30 : 20));
+    function createCompositeNoise() {
+        const signalTear = Math.random() < 0.12;
+        const lineCount = Math.round(randomBetween(signalTear ? 16 : 9, signalTear ? 26 : 16));
         const lines = [];
 
         for (let i = 0; i < lineCount; i += 1) {
@@ -166,48 +94,100 @@
             lines.push(`linear-gradient(rgba(0, 0, 0, ${opacity}) 0 100%) ${x.toFixed(1)}% ${y}px / ${width}px ${height}px no-repeat`);
         }
 
-        compositeDropouts.style.setProperty('--composite-x', `${randomBetween(-2, 2).toFixed(1)}%`);
-        compositeDropouts.style.setProperty('--composite-noise', lines.join(', '));
+        return lines.join(', ');
     }
 
-    function updateCompositePulse() {
-        if (!compositeDropouts) return;
+    function buildFrameBanks() {
+        vhsFrames = [];
+        compositeFrames = [];
 
-        compositeDropouts.style.setProperty('--composite-opacity', compositePulseLevels[compositePulseStep].toFixed(2));
-        compositePulseStep = (compositePulseStep + 1) % compositePulseLevels.length;
+        for (let i = 0; i < vhsFrameCount; i += 1) {
+            const hardBrightHit = Math.random() < 0.08;
+            const hardDropoutHit = Math.random() < 0.08;
+            vhsFrames.push({
+                bands: createVhsBands(hardBrightHit),
+                bandsOpacity: randomBetween(0.3, hardBrightHit ? 0.86 : 0.66).toFixed(2),
+                dropouts: createVhsBands(hardDropoutHit, true),
+                dropoutsOpacity: randomBetween(0.2, hardDropoutHit ? 0.68 : 0.5).toFixed(2)
+            });
+        }
+
+        for (let i = 0; i < compositeFrameCount; i += 1) {
+            compositeFrames.push({
+                noise: createCompositeNoise(),
+                opacity: randomBetween(0.18, 0.38).toFixed(2)
+            });
+        }
     }
 
-    function jumpVhsTracking(timestamp) {
-        if (timestamp - lastBrightFrame >= brightFrameInterval - 1) {
-            updateBrightTracking();
-            lastBrightFrame = timestamp;
+    function applyFrame() {
+        const vhsFrame = vhsFrames[frameIndex % vhsFrames.length];
+        const compositeFrame = compositeFrames[frameIndex % compositeFrames.length];
+
+        if (vhsTracking && vhsFrame) {
+            vhsTracking.style.setProperty('--vhs-bands-opacity', vhsFrame.bandsOpacity);
+            vhsTracking.style.setProperty('--vhs-bands', vhsFrame.bands);
+            vhsTracking.style.setProperty('--vhs-dropouts-opacity', vhsFrame.dropoutsOpacity);
+            vhsTracking.style.setProperty('--vhs-dropouts', vhsFrame.dropouts);
         }
 
-        if (timestamp - lastDropoutFrame >= dropoutFrameInterval - 1) {
-            updateDarkDropouts();
-            lastDropoutFrame = timestamp;
+        if (compositeDropouts && compositeFrame) {
+            compositeDropouts.style.setProperty('--composite-opacity', compositeFrame.opacity);
+            compositeDropouts.style.setProperty('--composite-noise', compositeFrame.noise);
         }
 
-        if (timestamp >= nextCompositePatternFrame) {
-            updateCompositeDropouts();
-            nextCompositePatternFrame = timestamp + compositePatternIntervals[compositePatternStep];
-            compositePatternStep = (compositePatternStep + 1) % compositePatternIntervals.length;
+        frameIndex += 1;
+    }
+
+    function animate(timestamp) {
+        if (!lastFrameTime || timestamp - lastFrameTime >= frameInterval) {
+            lastFrameTime = timestamp;
+            applyFrame();
         }
 
-        if (timestamp - lastCompositePulseFrame >= compositePulseInterval - 1) {
-            updateCompositePulse();
-            lastCompositePulseFrame = timestamp;
-        }
+        animationFrame = window.requestAnimationFrame(animate);
+    }
 
-        vhsFrame = window.requestAnimationFrame(jumpVhsTracking);
+    function clearVhsTrackingMotion() {
+        window.cancelAnimationFrame(animationFrame);
+        window.cancelAnimationFrame(resizeFrame);
+        animationFrame = 0;
+        resizeFrame = 0;
+        lastFrameTime = 0;
+        frameIndex = 0;
+
+        if (vhsTracking) {
+            vhsProperties.forEach(property => vhsTracking.style.removeProperty(property));
+        }
+        if (compositeDropouts) {
+            compositeProperties.forEach(property => compositeDropouts.style.removeProperty(property));
+        }
+    }
+
+    function startVhsTrackingMotion() {
+        refreshLayerMetrics();
+        buildFrameBanks();
+        applyFrame();
+        animationFrame = window.requestAnimationFrame(animate);
     }
 
     function updateVhsTrackingPreference() {
         clearVhsTrackingMotion();
-        refreshLayerMetrics();
         if (!reducedMotion.matches && !document.hidden) {
-            vhsFrame = window.requestAnimationFrame(jumpVhsTracking);
+            startVhsTrackingMotion();
         }
+    }
+
+    function scheduleMetricRefresh() {
+        if (resizeFrame) return;
+
+        resizeFrame = window.requestAnimationFrame(() => {
+            resizeFrame = 0;
+            if (!reducedMotion.matches && !document.hidden) {
+                refreshLayerMetrics();
+                buildFrameBanks();
+            }
+        });
     }
 
     updateVhsTrackingPreference();

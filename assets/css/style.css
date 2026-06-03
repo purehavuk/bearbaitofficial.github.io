@@ -152,8 +152,6 @@ body {
     mix-blend-mode: multiply;
     opacity: var(--composite-opacity);
     filter: none;
-    transform: translate3d(var(--composite-x), 0, 0);
-    will-change: transform;
 }
 
 .vhs-tracking {
@@ -195,9 +193,7 @@ body {
             rgba(0, 0, 0, 0.5) 85%,
             rgba(0, 0, 0, 0.75) 95%,
             rgba(0, 0, 0, 0.95) 100%);
-    filter: contrast(1.5) brightness(1.25);
-    transform: translate3d(var(--vhs-x), 0, 0) scaleY(var(--vhs-y-scale));
-    will-change: transform;
+    opacity: 0.82;
 }
 
 .vhs-tracking::before {
@@ -207,9 +203,6 @@ body {
     background: var(--vhs-dropouts);
     mix-blend-mode: multiply;
     opacity: var(--vhs-dropouts-opacity);
-    filter: blur(0.45px);
-    transform: translate3d(var(--vhs-dropouts-x), 0, 0) scaleX(var(--vhs-dropouts-scale));
-    will-change: transform;
 }
 
 .vhs-tracking::after {
@@ -219,9 +212,6 @@ body {
     background: var(--vhs-bands);
     mix-blend-mode: screen;
     opacity: var(--vhs-bands-opacity);
-    filter: blur(0.6px);
-    transform: translate3d(var(--vhs-bands-x), 0, 0) scaleX(var(--vhs-bands-scale));
-    will-change: transform;
 }
 
 .crt-reflection {
@@ -1155,6 +1145,12 @@ button:hover>span {
     align-items: start;
 }
 
+.contact-methods {
+    display: grid;
+    gap: 18px;
+    width: min(100%, 300px);
+}
+
 .contact-grid .contact-email-group {
     aspect-ratio: 1 / 1;
     align-self: start;
@@ -1180,6 +1176,36 @@ button:hover>span {
     aspect-ratio: 1 / 1;
     width: 112px;
     height: auto;
+}
+
+.contact-mail-group {
+    min-height: 0;
+}
+
+.contact-mail-copy {
+    position: relative;
+    z-index: 3;
+    padding: 16px 18px 18px;
+    color: rgba(255, 230, 153, 0.82);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.contact-mail-copy p+p {
+    margin-top: 12px;
+}
+
+.contact-mail-address {
+    color: var(--crt-white);
+    font-family: var(--font-header);
+    font-size: 20px;
+    line-height: 1.05;
+    text-transform: uppercase;
+}
+
+.contact-mail-note {
+    color: rgba(255, 184, 54, 0.68);
 }
 
 .button-primary {
@@ -1569,7 +1595,7 @@ button:hover>span {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 2147483647;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -2241,6 +2267,10 @@ button:hover>span {
 
     .contact-grid .text-column {
         order: 1;
+    }
+
+    .contact-grid .contact-methods {
+        order: 2;
     }
 
     .contact-grid .contact-email-group {
